@@ -1,0 +1,30 @@
+server:
+  port: 9000
+
+spring:
+  # datasource:
+    # H2 Database
+    # url: jdbc:h2:tcp://localhost/~/devin;MODE=MYSQL
+    # username: sa
+    # password:
+    # driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    #       ddl-auto: none
+    properties:
+      hibernate:
+        # show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+
+
+logging.level:
+  org.hibernate.SQL: debug
+# org.hibernate.type: trace
+
