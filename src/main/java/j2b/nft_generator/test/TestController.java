@@ -15,4 +15,14 @@ public class TestController {
     public String item(Model model) {
         return "item";
     }
+
+    @GetMapping("/test")
+    public String test(Model model) {
+        return "forms-basic-inputs";
+    }
+
+    @GetMapping("/addItem")
+    public String addItem(Model model) {
+        return "addItem";
+    }
 }
