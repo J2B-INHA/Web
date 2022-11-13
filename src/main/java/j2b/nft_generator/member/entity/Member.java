@@ -1,4 +1,4 @@
-package j2b.nft_generator.member;
+package j2b.nft_generator.member.entity;
 
 import lombok.Getter;
 
