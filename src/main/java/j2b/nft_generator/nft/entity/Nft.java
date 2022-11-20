@@ -33,11 +33,17 @@ public class Nft {
     @Column(name = "nft_privilege", columnDefinition = "TEXT")
     private String privilege;
 
-    @Column(name = "nft_main_img", columnDefinition = "TEXT")
+    @Column(name = "nft_main_img_url", columnDefinition = "TEXT")
     private String mainImageUrl;
 
-    @Column(name = "nft_preview_img", columnDefinition = "TEXT")
+    @Column(name = "nft_preview_img_url", columnDefinition = "TEXT")
     private String previewImageUrl;
+
+    @Column(name = "nft_main_img", columnDefinition = "TEXT")
+    private String mainImageFileName;
+
+    @Column(name = "nft_preview_img", columnDefinition = "TEXT")
+    private String previewImageFileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mbr_id")
@@ -46,7 +52,9 @@ public class Nft {
     protected Nft() { }
 
     private Nft(String name, String description, int price, double royalty,
-                String privilege, String mainImageUrl, String previewImageUrl, Member member) {
+                String privilege, String mainImageUrl, String previewImageUrl,
+                String mainImageFileName, String previewImageFileName,
+                Member member) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -54,6 +62,8 @@ public class Nft {
         this.privilege = privilege;
         this.mainImageUrl = mainImageUrl;
         this.previewImageUrl = previewImageUrl;
+        this.mainImageFileName = mainImageFileName;
+        this.previewImageFileName = previewImageFileName;
         this.member = member;
     }
 
@@ -63,11 +73,18 @@ public class Nft {
      * @param dto NFT 생성시 넘겨받은 DTO
      * @param mainImageUrl NFT 메인 이미지 URL
      * @param previewImageUrl NFT 미리보기 이미지 URL
+     * @param mainImageFileName NFT 메인 이미지 파일 이름
+     * @param previewImageFileName NFT 미리보기 이미지 파일 이름
      * @param member NFT를 생성한 사용자
      * @return 생성된 NFT 엔티티
      */
-    public static Nft createNft(AddNftReqDTO dto, String mainImageUrl, String previewImageUrl, Member member) {
+    public static Nft createNft(AddNftReqDTO dto,
+                                String mainImageUrl, String previewImageUrl,
+                                String mainImageFileName, String previewImageFileName,
+                                Member member) {
         return new Nft(dto.getNameInput(), dto.getDescriptionInput(), dto.getPriceInput(),
-                dto.getRoyaltyInput(), dto.getPrivilegeInput(), mainImageUrl, previewImageUrl, member);
+                dto.getRoyaltyInput(), dto.getPrivilegeInput(), mainImageUrl, previewImageUrl,
+                mainImageFileName, previewImageFileName,
+                member);
     }
 }

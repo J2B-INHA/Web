@@ -1,5 +1,6 @@
 package j2b.nft_generator.nft.service;
 
+import j2b.nft_generator.file.FileUploadUtil;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
@@ -23,6 +24,7 @@ import javax.transaction.Transactional;
 public class NftService {
 
     private final NftRepository nftRepository;
+    private final FileUploadUtil fileUploadUtil;
 
     /**
      * NFT 엔티티를 생성하고, 넘겨받은 파일에 대한 파일업로드를 진행합니다.
@@ -33,7 +35,7 @@ public class NftService {
     public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member) {
         // TODO : 이미지 업로드
 
-        Nft createdNft = nftRepository.save(Nft.createNft(dto, null, null, member));
+        Nft createdNft = nftRepository.save(Nft.createNft(dto, null, null, null, null, member));
         return new AddNftResDTO(createdNft.getId());
     }
 

@@ -36,11 +36,14 @@ class NftRepositoryTest {
     public void init() {
         Member member = memberRepository.save(createMember("홍길동", "abcde12345", "password12345"));
         Nft nft = nftRepository.save(createNft(new AddNftReqDTO("이름1", "설명1",
-                10000, 0.2, "특전"), null, null, member));
+                10000, 0.2, "특전"), null, null,
+                null, null, member));
         nftRepository.save(createNft(new AddNftReqDTO("이름2", "설명2",
-                20000, 0.2, "특전"), null, null, member));
+                20000, 0.2, "특전"), null, null,
+                null, null, member));
         nftRepository.save(createNft(new AddNftReqDTO("이름3", "설명3",
-                30000, 0.2, "특전"), null, null, member));
+                30000, 0.2, "특전"), null, null,
+                null, null, member));
         id = nft.getId();
     }
 
