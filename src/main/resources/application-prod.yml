@@ -1,0 +1,55 @@
+server:
+  port: 5000
+  servlet:
+    encoding:
+      charset: utf-8
+
+spring:
+  datasource:
+    # MySQL Database
+    url: jdbc:mysql://${rds.hostname}:${rds.port}/${rds.db.name}
+    driver-class-name: com.mysql.jdbc.Driver
+    username: ${rds.username}
+    password: ${rds.password}
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: create
+    #       ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+    properties:
+      hibernate:
+        # show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+
+  # File Upload
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+
+logging.level:
+  org.hibernate.SQL: INFO
+
+# AWS S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${IAM_ACCESS_KEY}
+      secret-key: ${IAM_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    stack:
+      auto: false
+
