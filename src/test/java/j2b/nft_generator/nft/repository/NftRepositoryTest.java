@@ -1,5 +1,6 @@
 package j2b.nft_generator.nft.repository;
 
+import j2b.nft_generator.member.dto.AddMemberReqDTO;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.member.repository.MemberRepository;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
@@ -34,7 +35,7 @@ class NftRepositoryTest {
 
     @BeforeEach
     public void init() {
-        Member member = memberRepository.save(createMember("홍길동", "abcde12345", "password12345"));
+        Member member = memberRepository.save(createMember(new AddMemberReqDTO("홍길동", "abcde12345", "password12345")));
         Nft nft = nftRepository.save(createNft(new AddNftReqDTO("이름1", "설명1",
                 10000, 0.2, "특전"), null, null,
                 null, null, member));

@@ -1,5 +1,6 @@
 package j2b.nft_generator.member.entity;
 
+import j2b.nft_generator.member.dto.AddMemberReqDTO;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -37,13 +38,11 @@ public class Member {
     /**
      * 사용자 엔티티를 생성하는 함수입니다.
      * createMember 함수로만 사용자는 생성될 수 있습니다.
-     * @param name 사용자 이름
-     * @param loginId 사용자 로그인 ID
-     * @param password 사용자 비밀번호
+     * @param dto 사용자 생성시 넘겨받은 DTO
      * @return 생성된 사용자 entity
      */
-    public static Member createMember(String name, String loginId, String password) {
-        return new Member(name, loginId, password);
+    public static Member createMember(AddMemberReqDTO dto) {
+        return new Member(dto.getName(), dto.getLoginId(), dto.getPassword());
     }
 
 }
