@@ -16,12 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static j2b.nft_generator.file.FileUploadUtil.NFT_CATEGORY;
+import static j2b.nft_generator.file.FileUploadUtil.PREVIEW_CATEGORY;
 
 /**
  * NFT 서비스 클래스입니다.
@@ -45,7 +45,7 @@ public class NftService {
      */
     public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member) {
         FileUploadResDTO mainFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
-        FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, previewImage);
+        FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, previewImage);
 
         Nft createdNft = nftRepository.save(Nft.createNft(dto, mainFile.getFileUrl(),
                 previewFile.getFileUrl(), mainFile.getFileName(), previewFile.getFileName(), member));

@@ -25,6 +25,7 @@ import java.io.InputStream;
 public class FileUploadUtil {
 
     public static final String NFT_CATEGORY = "nft";
+    public static final String PREVIEW_CATEGORY = "preview";
 
     /**
      * AWS S3 bucket 이름
