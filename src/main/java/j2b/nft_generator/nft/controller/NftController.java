@@ -42,4 +42,10 @@ public class NftController {
         model.addAttribute("nft", result);
         return "item";
     }
+
+    @GetMapping("/")
+    public String viewHome(Model model) {
+
+        return "index";
+    }
 }

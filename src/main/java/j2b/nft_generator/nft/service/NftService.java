@@ -5,15 +5,20 @@ import j2b.nft_generator.file.dto.FileUploadResDTO;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
+import j2b.nft_generator.nft.dto.HomeNftResDTO;
 import j2b.nft_generator.nft.dto.ViewNftResDTO;
 import j2b.nft_generator.nft.entity.Nft;
 import j2b.nft_generator.nft.repository.NftRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static j2b.nft_generator.file.FileUploadUtil.NFT_CATEGORY;
@@ -62,6 +67,22 @@ public class NftService {
         }
         return new ViewNftResDTO(findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
                 findNft.get().getMainImageUrl());
+    }
+
+    /**
+     * 특정 개수의 NFT 블럭을 반환하는 메서드입니다.
+     * index.html, related items 등을 조회할 때 이용됩니다.
+     * TODO : 페이징 로직 특정 필요
+     * @param size 조회할 NFT의 개수
+     * @return 조회할 만큼의 NFT를 담고 있는 리스트
+     */
+    public List<HomeNftResDTO> getMultipleNftBlocks(int size) {
+        List<HomeNftResDTO> result = new ArrayList<>();
+        Page<Nft> findNfs = nftRepository.findAll(PageRequest.of(0, size));
+        for (Nft nft : findNfs) {
+            result.add(new HomeNftResDTO(nft.getId(), nft.getName(), nft.getPrice(), nft.getPreviewImageUrl()));
+        }
+        return result;
     }
 
 }
