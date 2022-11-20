@@ -2,3 +2,5 @@ spring:
   profiles:
     active:
       - dev
+    include:
+      - AWS-KEY
