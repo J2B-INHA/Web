@@ -16,8 +16,7 @@ J2B팀의 이미지 인식 기반 NFT generator Spring 프로젝트 repository �
 # 🧑‍💻 기술 스택
 
 # ERD
-![J2B_NFT_INHA](https://user-images.githubusercontent.com/66549638/201521919-c26f3fa2-0c37-4558-b23d-cf7ccab1d06a.png)
-
+![J2B_NFT_INHA (1)](https://user-images.githubusercontent.com/66549638/202888376-876076b6-0cb7-4edf-ae08-a72c8ce3a7a0.png)
 
 # 주요 관심사
 
