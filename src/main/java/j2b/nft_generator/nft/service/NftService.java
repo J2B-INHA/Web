@@ -5,6 +5,7 @@ import j2b.nft_generator.file.dto.FileUploadResDTO;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
+import j2b.nft_generator.nft.dto.ViewNftResDTO;
 import j2b.nft_generator.nft.entity.Nft;
 import j2b.nft_generator.nft.repository.NftRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
+
+import java.util.Optional;
 
 import static j2b.nft_generator.file.FileUploadUtil.NFT_CATEGORY;
 
@@ -43,6 +46,22 @@ public class NftService {
                 previewFile.getFileUrl(), mainFile.getFileName(), previewFile.getFileName(), member));
 
         return new AddNftResDTO(createdNft.getId());
+    }
+
+    /**
+     * 특정 ID를 가지는 상품의 정보를 조회하는 메서드입니다.
+     * @param id 해당 상품의 ID
+     * @return 해당 NFT 상품의 정보를 담고 있는 DTO
+     */
+    public ViewNftResDTO viewSingleNft(Long id) {
+        Optional<Nft> findNft = nftRepository.findById(id);
+
+        if (findNft.isEmpty()) {
+            // TODO : 예외 처리 로직 필요
+            return null;
+        }
+        return new ViewNftResDTO(findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
+                findNft.get().getMainImageUrl());
     }
 
 }
