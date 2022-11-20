@@ -1,6 +1,6 @@
 package j2b.nft_generator.nft.controller;
 
-import j2b.nft_generator.nft.controller.dto.AddNftDTO;
+import j2b.nft_generator.nft.dto.AddNftDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

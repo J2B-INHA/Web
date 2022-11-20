@@ -1,4 +1,4 @@
-package j2b.nft_generator.nft.controller.dto;
+package j2b.nft_generator.nft.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
