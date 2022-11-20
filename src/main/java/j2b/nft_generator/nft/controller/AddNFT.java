@@ -1,6 +1,6 @@
 package j2b.nft_generator.nft.controller;
 
-import j2b.nft_generator.nft.dto.AddNftDTO;
+import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AddNFT {
 
     @PostMapping("/addItem")
-    public String createNFT(@ModelAttribute AddNftDTO nftDto,
+    public String createNFT(@ModelAttribute AddNftReqDTO nftDto,
                             @RequestPart("mainImageFile") MultipartFile mainImage,
                             @RequestPart("previewImageFile") MultipartFile previewImage) {
         log.info("success");

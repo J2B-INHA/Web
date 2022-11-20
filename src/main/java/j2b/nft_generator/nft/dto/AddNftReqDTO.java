@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddNftDTO {
+public class AddNftReqDTO {
     private String nameInput;
     private String descriptionInput;
     private int priceInput;
