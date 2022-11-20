@@ -37,3 +37,5 @@ out/
 .vscode/
 
 src/main/resources/application-AWS-KEY.properties
+
+src/test/resources/application-AWS-KEY.properties
