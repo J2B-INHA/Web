@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 /**
  * Member 관련 서비스 클래스입니다.
@@ -39,6 +40,11 @@ public class MemberService {
      * @return 현재 로그인된 사용자 정보
      */
     public Member getLoginMember() {
+        Optional<Member> findMember = memberRepository.findByName("조민호");
+        if (findMember.isPresent()) {
+            return findMember.get();
+        }
+
         AddMemberResDTO member = createMember(new AddMemberReqDTO("조민호", "abcde12345", "password12345"));
         return memberRepository.findById(member.getId()).get();
     }
