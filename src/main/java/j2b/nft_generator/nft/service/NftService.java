@@ -1,6 +1,7 @@
 package j2b.nft_generator.nft.service;
 
 import j2b.nft_generator.file.FileUploadUtil;
+import j2b.nft_generator.file.dto.FileUploadResDTO;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
+
+import static j2b.nft_generator.file.FileUploadUtil.NFT_CATEGORY;
 
 /**
  * NFT 서비스 클래스입니다.
@@ -33,9 +36,12 @@ public class NftService {
      * @return 생성된 NFT 엔티티의 ID를 담고 있는 DTO
      */
     public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member) {
-        // TODO : 이미지 업로드
+        FileUploadResDTO mainFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
+        FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, previewImage);
 
-        Nft createdNft = nftRepository.save(Nft.createNft(dto, null, null, null, null, member));
+        Nft createdNft = nftRepository.save(Nft.createNft(dto, mainFile.getFileUrl(),
+                previewFile.getFileUrl(), mainFile.getFileName(), previewFile.getFileName(), member));
+
         return new AddNftResDTO(createdNft.getId());
     }
 

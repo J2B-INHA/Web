@@ -24,6 +24,8 @@ import java.io.InputStream;
 @Slf4j
 public class FileUploadUtil {
 
+    public static final String NFT_CATEGORY = "nft";
+
     /**
      * AWS S3 bucket 이름
      */
