@@ -24,7 +24,7 @@ public class TestFileController {
     @GetMapping("/test/file/upload")
     public String uploadSingleFile(@RequestParam(name = "category") String category,
                                    @RequestPart(name = "file")MultipartFile file) {
-        return fileUploadUtil.uploadSingleFile(category, file);
+        return fileUploadUtil.uploadSingleFile(category, file).getFileUrl();
     }
 
     @GetMapping("/test/file/delete")

@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import j2b.nft_generator.file.dto.FileUploadResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,9 +56,9 @@ public class FileUploadUtil {
      * @param multipartFile 넘겨받은 multipartFile (파일)
      * @return 업로드된 파일의 접근 URL
      */
-    public String uploadSingleFile(String category, MultipartFile multipartFile) {
+    public FileUploadResDTO uploadSingleFile(String category, MultipartFile multipartFile) {
         if (multipartFile == null || multipartFile.isEmpty()) {
-            return "";
+            return null;
         }
         validateFileExists(multipartFile);
 
@@ -74,7 +75,7 @@ public class FileUploadUtil {
             // TODO : 예외 처리 로직
         }
 
-        return amazonS3Client.getUrl(bucketName, fileName).toString();
+        return new FileUploadResDTO(fileName, amazonS3Client.getUrl(bucketName, fileName).toString());
     }
 
     /**
