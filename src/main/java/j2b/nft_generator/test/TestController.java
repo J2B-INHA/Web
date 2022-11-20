@@ -23,6 +23,6 @@ public class TestController {
 
     @GetMapping("/addItem")
     public String addItem(Model model) {
-        return "addItem";
+        return "addItemForm";
     }
 }

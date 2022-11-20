@@ -43,6 +43,9 @@ dependencies {
 
 	// Spring Boot Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Spring Cloud AWS
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
 }
 
 tasks.named('test') {
