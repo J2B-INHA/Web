@@ -50,7 +50,11 @@ public class NftController {
             // TODO : error 페이지 작업 이후 error 페이지로 전송 필요
             return "index";
         }
+
+        List<HomeNftResDTO> nftBlocks = nftService.getMultipleNftBlocks(4);
+
         model.addAttribute("nft", result);
+        model.addAttribute("nftBlocks", nftBlocks);
         return "item";
     }
 
