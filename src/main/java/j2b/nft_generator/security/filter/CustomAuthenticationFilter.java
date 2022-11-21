@@ -20,7 +20,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     /**
-     * userId와 password를 기반으로 토콘을 발급하는 과정을 담당하는 메서드입니다.
+     * userId와 password를 기반으로 토큰을 발급하는 과정을 담당하는 메서드입니다.
      * 원래는 username/password가 기본값이지만, 이를 userId/password 로 로그인하기 위해 오버라이딩합니다.
      * @param request from which to extract parameters and perform the authentication
      * @param response the response, which may be needed if the implementation has to do a

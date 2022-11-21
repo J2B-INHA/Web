@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -33,22 +35,28 @@ public class NftController {
      * @return NFT 등록 html
      */
     @GetMapping("/addItem")
-    public String addItem() {
+    public String addItem(Model model) {
+        model.addAttribute("nftForm", new AddNftReqDTO());
         return "addItemForm";
     }
 
     /**
      * NFT 생성 폼 관련 메서드입니다.
-     * TODO : validation 처리
      * @param nftDto Form으로부터 입력받은 NFT 기본 정보
      * @param mainImage NFT 메인 이미지
      * @param previewImage NFT 미리보기 이미지
      * @return item 페이지
      */
     @PostMapping("/addItem")
-    public String createNFT(@ModelAttribute AddNftReqDTO nftDto,
+    public String createNFT(@Valid @ModelAttribute("nftForm") AddNftReqDTO nftDto,
+                            BindingResult bindingResult,
                             @RequestPart("mainImageFile") MultipartFile mainImage,
                             @RequestPart("previewImageFile") MultipartFile previewImage) {
+
+        if (bindingResult.hasErrors()) {
+            return "addItemForm";
+        }
+
         AddNftResDTO nft = nftService.createNft(nftDto, mainImage, previewImage, memberService.getLoginMember());
         return "redirect:/item/" + nft.getId();
     }

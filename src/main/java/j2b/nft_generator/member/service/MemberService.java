@@ -45,7 +45,11 @@ public class MemberService implements UserDetailsService {
      * @return 현재 로그인된 사용자 정보
      */
     public Member getLoginMember() {
-        return (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            return (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
