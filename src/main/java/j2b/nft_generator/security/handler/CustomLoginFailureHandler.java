@@ -31,7 +31,7 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
         } else if (exception instanceof BadCredentialsException) {
             message = "BadCredentialsException account";
         }
-        
+
         setDefaultFailureUrl("/loginForm?error=true&exception=" + message);
 
         super.onAuthenticationFailure(request, response, exception);
