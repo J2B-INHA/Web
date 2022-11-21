@@ -6,20 +6,23 @@ import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
  * Member 관련 서비스 클래스입니다.
- * @version 1.0.0
+ * @version 1.0.1
  * @author CHO Min Ho
  */
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -49,4 +52,8 @@ public class MemberService {
         return memberRepository.findById(member.getId()).get();
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        return memberRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(loginId));
+    }
 }

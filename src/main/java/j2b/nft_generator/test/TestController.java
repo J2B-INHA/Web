@@ -35,4 +35,9 @@ public class TestController {
     public String signUp(Model model) {
         return "signup";
     }
+
+    @GetMapping("/loginSuccess")
+    public String loginSuccess() {
+        return "loginSuccess";
+    }
 }
