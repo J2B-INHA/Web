@@ -30,6 +30,7 @@ public class NftController {
 
     /**
      * NFT 생성 폼 관련 메서드입니다.
+     * TODO : validation 처리
      * @param nftDto Form으로부터 입력받은 NFT 기본 정보
      * @param mainImage NFT 메인 이미지
      * @param previewImage NFT 미리보기 이미지
