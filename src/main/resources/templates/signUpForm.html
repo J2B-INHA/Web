@@ -131,7 +131,10 @@
               <h4 class="mb-2">J2B 회원가입 🚀</h4>
               <p class="mb-4">J2B에서 원하는 사진을 NFT로 바꿔보세요!</p>
 
-              <form id="formAuthentication" class="mb-3" action="/signUp" method="POST">
+              <form id="formAuthentication" class="mb-3" action="/signUp" method="POST" th:object="${memberForm}">
+                <p class="mb-4" style="color: #bd2130" th:if="${#fields.hasErrors('name')}">이름을 입력해주세요!</p>
+                <p class="mb-4" style="color: #bd2130" th:if="${#fields.hasErrors('loginId')}">ID를 입력해주세요!</p>
+                <p class="mb-4" style="color: #bd2130" th:if="${#fields.hasErrors('password')}">비밀번호를 입력해주세요!</p>
                 <div class="mb-3">
                   <label for="username" class="form-label">Name</label>
                   <input

@@ -5,9 +5,12 @@ import j2b.nft_generator.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import javax.validation.Valid;
 
 /**
  * Member 엔티티 관련 컨트롤러 클래스입니다.
@@ -35,7 +38,8 @@ public class MemberController {
      * @return 회원가입 페이지
      */
     @GetMapping("/signUpForm")
-    public String signUpForm() {
+    public String signUpForm(Model model) {
+        model.addAttribute("memberForm", new AddMemberReqDTO());
         return "signUpForm";
     }
 
@@ -45,13 +49,14 @@ public class MemberController {
      * @return 회원가입 완료 페이지
      */
     @PostMapping("/signUp")
-    public String signUp(@ModelAttribute AddMemberReqDTO dto) {
+    public String signUp(@Valid @ModelAttribute("memberForm") AddMemberReqDTO dto, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "signUpForm";
+        }
+
         memberService.createMember(dto);
-
-        // TODO : 회원가입 실패 시 처리 로직
-        // TODO : validation 로직
-
-        return "signUpSuccess";
+        return "redirect:/signUpSuccess";
 
     }
 }
