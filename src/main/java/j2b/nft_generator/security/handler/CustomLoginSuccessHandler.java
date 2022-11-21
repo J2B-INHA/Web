@@ -23,7 +23,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Home으로 리다이렉트
-        response.sendRedirect("/");
+        response.sendRedirect("/loginSuccess");
 
         // TODO : 요청한 URL로 리다이렉트
         // response.sendRedirect("/" + request.getParameter("redirectURL"));
