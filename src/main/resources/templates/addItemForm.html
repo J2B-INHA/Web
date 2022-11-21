@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.tyhmeleaf.org">
+<html lang="ko" xmlns:th="http://www.tyhmeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -67,9 +67,14 @@
             </ul>
 
             <form class="d-flex" method="get" action="/loginForm">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link" href="/addItem">조민호님</a></li>
-                </ul>
+                <li class="nav-item dropdown" style="list-style-type: none" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="|${#authentication.name}님|">로그인</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">마이페이지</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">로그아웃</a></li>
+                    </ul>
+                </li>
             </form>
         </div>
     </div>
