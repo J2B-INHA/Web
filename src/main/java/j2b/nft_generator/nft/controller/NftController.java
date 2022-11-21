@@ -69,7 +69,7 @@ public class NftController {
 
     @GetMapping("/")
     public String viewHome(Model model) {
-        List<HomeNftResDTO> nftBlocks = nftService.getMultipleNftBlocks(8);
+        List<HomeNftResDTO> nftBlocks = nftService.getAllNftBlocks();
         model.addAttribute("nftBlocks", nftBlocks);
         return "index";
     }

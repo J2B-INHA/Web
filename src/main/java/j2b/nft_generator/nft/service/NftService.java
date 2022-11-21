@@ -71,15 +71,29 @@ public class NftService {
 
     /**
      * 특정 개수의 NFT 블럭을 반환하는 메서드입니다.
-     * index.html, related items 등을 조회할 때 이용됩니다.
+     * related items 등을 조회할 때 이용됩니다.
      * TODO : 페이징 로직 특정 필요
      * @param size 조회할 NFT의 개수
      * @return 조회할 만큼의 NFT를 담고 있는 리스트
      */
     public List<HomeNftResDTO> getMultipleNftBlocks(int size) {
         List<HomeNftResDTO> result = new ArrayList<>();
-        Page<Nft> findNfs = nftRepository.findAll(PageRequest.of(0, size));
-        for (Nft nft : findNfs) {
+        Page<Nft> findNfts = nftRepository.findAll(PageRequest.of(0, size));
+        for (Nft nft : findNfts) {
+            result.add(new HomeNftResDTO(nft.getId(), nft.getName(), nft.getPrice(), nft.getPreviewImageUrl()));
+        }
+        return result;
+    }
+
+    /**
+     * 등록된 모든 NFT 블럭을 반환하는 메서드입니다.
+     * index.html에서 사용됩니다.
+     * @return 모든 NFT를 담고 있는 리스트
+     */
+    public List<HomeNftResDTO> getAllNftBlocks() {
+        List<HomeNftResDTO> result = new ArrayList<>();
+        List<Nft> allNfts = nftRepository.findAll();
+        for (Nft nft : allNfts) {
             result.add(new HomeNftResDTO(nft.getId(), nft.getName(), nft.getPrice(), nft.getPreviewImageUrl()));
         }
         return result;
