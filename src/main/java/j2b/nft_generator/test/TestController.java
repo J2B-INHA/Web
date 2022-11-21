@@ -1,8 +1,6 @@
 package j2b.nft_generator.test;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Test Controller입니다.

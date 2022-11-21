@@ -6,12 +6,12 @@ import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 /**
  * Member 관련 서비스 클래스입니다.
@@ -32,24 +32,20 @@ public class MemberService implements UserDetailsService {
      * @return 생성된 Member의 ID를 담고 있는 DTO
      */
     public AddMemberResDTO createMember(AddMemberReqDTO dto) {
+        // 중복된 로그인 Id인 경우
+        if (memberRepository.findByLoginId(dto.getLoginId()).isPresent()) {
+            return null;
+        }
         Member member = memberRepository.save(Member.createMember(dto));
         return new AddMemberResDTO(member.getId());
     }
 
     /**
      * 현재 로그인된 사용자 정보를 반환합니다.
-     * TODO : 현재 로그인을 임시로 구현했기 때문에 Mockup 사용자를 저장하고, 이를 반환하도록 설계하였습니다.
-     * TODO : 사용자 관련 로직을 전부 구현되어 있으며, 추후 로그인 로직을 보완할 예정입니다.
      * @return 현재 로그인된 사용자 정보
      */
     public Member getLoginMember() {
-        Optional<Member> findMember = memberRepository.findByName("조민호");
-        if (findMember.isPresent()) {
-            return findMember.get();
-        }
-
-        AddMemberResDTO member = createMember(new AddMemberReqDTO("조민호", "abcde12345", "password12345"));
-        return memberRepository.findById(member.getId()).get();
+        return (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @Override
