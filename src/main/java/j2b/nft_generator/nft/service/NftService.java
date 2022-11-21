@@ -66,7 +66,7 @@ public class NftService {
             return null;
         }
         return new ViewNftResDTO(findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
-                findNft.get().getMainImageUrl());
+                findNft.get().getMainImageUrl(), findNft.get().getRoyalty(), findNft.get().getPrivilege());
     }
 
     /**
