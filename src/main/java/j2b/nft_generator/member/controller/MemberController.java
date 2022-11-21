@@ -37,6 +37,9 @@ public class MemberController {
      */
     @GetMapping("/loginForm")
     public String login() {
+        if (memberService.getLoginMember() != null) {
+            return "redirect:/";
+        }
         return "loginForm";
     }
 
