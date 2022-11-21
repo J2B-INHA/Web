@@ -93,6 +93,9 @@
                         <div class="small mb-1">NFT 이름</div>
                         <h1 class="display-5 fw-bolder" th:text="*{nft.getName()}">Shop item template</h1>
                         <div class="fs-5 mb-5">
+                            <span>[[*{nft.getMemberName()}]] 작가</span>
+                        </div>
+                        <div class="fs-5 mb-5">
                             <span>[[*{nft.getPrice()}]] KRW</span>
                         </div>
                         <div class="fs-5 mb-5">

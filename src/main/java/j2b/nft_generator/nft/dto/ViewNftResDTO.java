@@ -20,4 +20,5 @@ public class ViewNftResDTO {
     private String mainImageUrl;
     private double royalty;
     private String privilege;
+    private String memberName;
 }

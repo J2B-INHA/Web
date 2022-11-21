@@ -57,8 +57,7 @@ public class NftController {
     public String viewSingleItem(@PathVariable(name = "id") Long id, Model model) {
         ViewNftResDTO result = nftService.viewSingleNft(id);
         if (result == null) {
-            // TODO : error 페이지 작업 이후 error 페이지로 전송 필요
-            return "index";
+            return "error/404";
         }
 
         List<HomeNftResDTO> nftBlocks = nftService.getMultipleNftBlocks(4);
