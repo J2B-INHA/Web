@@ -11,33 +11,5 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class TestController {
 
-    @GetMapping("/item")
-    public String item(Model model) {
-        return "item";
-    }
 
-    @GetMapping("/test")
-    public String test(Model model) {
-        return "forms-basic-inputs";
-    }
-
-    @GetMapping("/addItem")
-    public String addItem(Model model) {
-        return "addItemForm";
-    }
-
-    @GetMapping("/loginForm")
-    public String login(Model model) {
-        return "login";
-    }
-
-    @GetMapping("/signupForm")
-    public String signUp(Model model) {
-        return "signup";
-    }
-
-    @GetMapping("/loginSuccess")
-    public String loginSuccess() {
-        return "loginSuccess";
-    }
 }

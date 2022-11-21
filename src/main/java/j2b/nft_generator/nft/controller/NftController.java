@@ -29,6 +29,15 @@ public class NftController {
     private final MemberService memberService;
 
     /**
+     * NFT 생성 폼을 불러오는 메서드입니다.
+     * @return NFT 등록 html
+     */
+    @GetMapping("/addItem")
+    public String addItem() {
+        return "addItemForm";
+    }
+
+    /**
      * NFT 생성 폼 관련 메서드입니다.
      * TODO : validation 처리
      * @param nftDto Form으로부터 입력받은 NFT 기본 정보
