@@ -16,11 +16,6 @@ public class TestController {
         return "item";
     }
 
-    @GetMapping("/test")
-    public String test(Model model) {
-        return "forms-basic-inputs";
-    }
-
     @GetMapping("/addItem")
     public String addItem(Model model) {
         return "addItemForm";
@@ -36,8 +31,4 @@ public class TestController {
         return "signup";
     }
 
-    @GetMapping("/loginSuccess")
-    public String loginSuccess() {
-        return "loginSuccess";
-    }
 }
