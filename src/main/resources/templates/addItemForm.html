@@ -81,11 +81,15 @@
 </nav>
 
 <div class="content-wrapper">
-    <form action="/addItem" method="post" enctype="multipart/form-data">
+    <form action="/addItem" method="post" enctype="multipart/form-data" th:object="${nftForm}">
         <div class="container-xxl flex-grow-1 container-p-y">
             <!-- NFT 기본 정보 -->
             <div class="card mb-4">
                 <h5 class="card-header">NFT 기본 정보</h5>
+                <div th:if="${#fields.hasErrors('nameInput')}" class="form-text" style="color: #bd2130">
+                    NFT 이름을 적어주세요!
+                </div>
+
                 <div class="card-body">
                     <div>
                         <label for="nameInput" class="form-label">NFT 이름</label>
@@ -103,6 +107,9 @@
                     </div>
                 </div>
 
+                <div th:if="${#fields.hasErrors('descriptionInput')}" class="form-text" style="color: #bd2130">
+                    NFT 설명을 적어주세요!
+                </div>
                 <div class="card-body">
                     <div>
                         <label for="descriptionInput" class="form-label">NFT 설명</label>
@@ -126,6 +133,10 @@
             <!-- NFT 가격 정보 -->
             <div class="card mb-4">
                 <h5 class="card-header">NFT 가격 정보</h5>
+
+                <div th:if="${#fields.hasErrors('priceInput')}" class="form-text" style="color: #bd2130">
+                    NFT 가격을 적어주세요!
+                </div>
                 <div class="card-body">
                     <div>
                         <label for="priceInput" class="form-label">NFT 가격</label>
@@ -143,6 +154,9 @@
                     </div>
                 </div>
 
+                <div th:if="${#fields.hasErrors('royaltyInput')}" class="form-text" style="color: #bd2130">
+                    NFT 로열티를 적어주세요!
+                </div>
                 <div class="card-body">
                     <div>
                         <label for="royaltyInput" class="form-label">NFT 로열티</label>
@@ -191,12 +205,12 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="mainImageFile" class="form-label">메인 이미지 (NFT로 변환할 이미지)를 선택해주세요.</label>
-                        <input class="form-control" type="file" id="mainImageFile" name="mainImageFile" />
+                        <input class="form-control" type="file" id="mainImageFile" name="mainImageFile" required />
                     </div>
 
                     <div class="mb-3">
                         <label for="previewImageFile" class="form-label">미리보기 이미지를 선택해주세요.</label>
-                        <input class="form-control" type="file" id="previewImageFile" name="previewImageFile" />
+                        <input class="form-control" type="file" id="previewImageFile" name="previewImageFile" required />
                     </div>
 
                 </div>
