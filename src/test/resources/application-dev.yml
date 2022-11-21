@@ -23,6 +23,8 @@ spring:
     basename: i18n/exception
     encoding: UTF-8
 
+  main:
+    allow-bean-definition-overriding: true
 
 logging.level:
   org.hibernate.SQL: debug

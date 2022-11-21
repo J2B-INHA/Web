@@ -36,6 +36,8 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
+  main:
+    allow-bean-definition-overriding: true
 
 logging.level:
   org.hibernate.SQL: INFO
