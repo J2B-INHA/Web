@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 /**
  * 사용자 엔티티 클래스입니다.
- * @version 1.0.1
+ * @version 1.0.2
  * @author CHO Min Ho
  */
 @Entity
@@ -49,12 +50,14 @@ public class Member implements UserDetails {
 
     /**
      * 사용자 엔티티를 생성하는 함수입니다.
+     * 비밀번호는 암호화되어 저장됩니다.
      * createMember 함수로만 사용자는 생성될 수 있습니다.
      * @param dto 사용자 생성시 넘겨받은 DTO
      * @return 생성된 사용자 entity
      */
     public static Member createMember(AddMemberReqDTO dto) {
-        return new Member(dto.getName(), dto.getLoginId(), dto.getPassword());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return new Member(dto.getName(), dto.getLoginId(), encoder.encode(dto.getPassword()));
     }
 
     /**
