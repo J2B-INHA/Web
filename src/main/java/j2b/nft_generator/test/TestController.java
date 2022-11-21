@@ -25,4 +25,14 @@ public class TestController {
     public String addItem(Model model) {
         return "addItemForm";
     }
+
+    @GetMapping("/loginForm")
+    public String login(Model model) {
+        return "login";
+    }
+
+    @GetMapping("/signupForm")
+    public String signUp(Model model) {
+        return "signup";
+    }
 }
