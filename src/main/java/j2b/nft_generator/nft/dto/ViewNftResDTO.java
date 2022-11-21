@@ -18,4 +18,7 @@ public class ViewNftResDTO {
     private int price;
     private String description;
     private String mainImageUrl;
+    private double royalty;
+    private String privilege;
+    private String memberName;
 }

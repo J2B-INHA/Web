@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>상품 상세</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -63,12 +63,23 @@
                             </ul>
                         </li>-->
                     </ul>
-                    <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            장바구니
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+
+                    <form class="d-flex" method="get" action="/loginForm">
+                        <button sec:authorize="!isAuthenticated()" class="btn btn-outline-dark" type="submit">
+                            로그인
                         </button>
+
+                        <li class="nav-item dropdown" style="list-style-type: none" sec:authorize="isAuthenticated()">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="|${#authentication.name}님|">로그인</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!">마이페이지</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="/member/logout">로그아웃</a></li>
+                            </ul>
+                        </li>
+                        <!--<ul sec:authorize="isAuthenticated()" class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                            <li class="nav-item"><a class="nav-link" href="#" th:text="|${#authentication.name}님|">로그인</a></li>
+                        </ul>-->
                     </form>
                 </div>
             </div>
@@ -79,17 +90,27 @@
                 <div class="row gx-4 gx-lg-5 align-items-center">
                     <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" th:src="*{nft.getMainImageUrl()}" alt="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" /></div>
                     <div class="col-md-6">
-                        <div class="small mb-1">이미지 NFT</div>
+                        <div class="small mb-1">NFT 이름</div>
                         <h1 class="display-5 fw-bolder" th:text="*{nft.getName()}">Shop item template</h1>
+                        <div class="fs-5 mb-5">
+                            <span>[[*{nft.getMemberName()}]] 작가</span>
+                        </div>
                         <div class="fs-5 mb-5">
                             <span>[[*{nft.getPrice()}]] KRW</span>
                         </div>
+                        <div class="fs-5 mb-5">
+                            <span>[[*{nft.getRoyalty()}]] % Royalty</span>
+                        </div>
+                        <div class="small mb-1">NFT 설명</div>
                         <p class="lead" th:text="*{nft.getDescription()}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
+
+                        <div class="small mb-1">NFT 특전</div>
+                        <p class="lead" th:text="*{nft.getPrivilege()}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
                         <div class="d-flex">
-                            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" disabled />
                             <button class="btn btn-outline-dark flex-shrink-0" type="button">
                                 <i class="bi-cart-fill me-1"></i>
-                                장바구니에 담기
+                                구매하기
                             </button>
                         </div>
                     </div>
@@ -121,7 +142,7 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">장바구니에 담기</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">구매하기</a></div>
                             </div>
                         </div>
                     </div>

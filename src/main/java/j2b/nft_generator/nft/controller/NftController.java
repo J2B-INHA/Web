@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -29,6 +31,16 @@ public class NftController {
     private final MemberService memberService;
 
     /**
+     * NFT 생성 폼을 불러오는 메서드입니다.
+     * @return NFT 등록 html
+     */
+    @GetMapping("/addItem")
+    public String addItem(Model model) {
+        model.addAttribute("nftForm", new AddNftReqDTO());
+        return "addItemForm";
+    }
+
+    /**
      * NFT 생성 폼 관련 메서드입니다.
      * @param nftDto Form으로부터 입력받은 NFT 기본 정보
      * @param mainImage NFT 메인 이미지
@@ -36,9 +48,15 @@ public class NftController {
      * @return item 페이지
      */
     @PostMapping("/addItem")
-    public String createNFT(@ModelAttribute AddNftReqDTO nftDto,
+    public String createNFT(@Valid @ModelAttribute("nftForm") AddNftReqDTO nftDto,
+                            BindingResult bindingResult,
                             @RequestPart("mainImageFile") MultipartFile mainImage,
                             @RequestPart("previewImageFile") MultipartFile previewImage) {
+
+        if (bindingResult.hasErrors()) {
+            return "addItemForm";
+        }
+
         AddNftResDTO nft = nftService.createNft(nftDto, mainImage, previewImage, memberService.getLoginMember());
         return "redirect:/item/" + nft.getId();
     }
@@ -47,8 +65,7 @@ public class NftController {
     public String viewSingleItem(@PathVariable(name = "id") Long id, Model model) {
         ViewNftResDTO result = nftService.viewSingleNft(id);
         if (result == null) {
-            // TODO : error 페이지 작업 이후 error 페이지로 전송 필요
-            return "index";
+            return "error/404";
         }
 
         List<HomeNftResDTO> nftBlocks = nftService.getMultipleNftBlocks(4);
@@ -60,7 +77,7 @@ public class NftController {
 
     @GetMapping("/")
     public String viewHome(Model model) {
-        List<HomeNftResDTO> nftBlocks = nftService.getMultipleNftBlocks(8);
+        List<HomeNftResDTO> nftBlocks = nftService.getAllNftBlocks();
         model.addAttribute("nftBlocks", nftBlocks);
         return "index";
     }
