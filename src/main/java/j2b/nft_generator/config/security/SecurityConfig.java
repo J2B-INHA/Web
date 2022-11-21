@@ -47,7 +47,8 @@ public class SecurityConfig {
                 .antMatchers("/").permitAll()
                 .antMatchers("/item/**").permitAll()
                 .antMatchers("/login/**").anonymous()
-                .antMatchers("/signupForm/**").permitAll()
+                .antMatchers("/signUpForm/**").permitAll()
+                .antMatchers("/signUp/**").permitAll()
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/error/**").permitAll()
                 .anyRequest().authenticated();
