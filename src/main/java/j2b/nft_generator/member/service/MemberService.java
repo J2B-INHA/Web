@@ -32,6 +32,10 @@ public class MemberService implements UserDetailsService {
      * @return 생성된 Member의 ID를 담고 있는 DTO
      */
     public AddMemberResDTO createMember(AddMemberReqDTO dto) {
+        // 중복된 로그인 Id인 경우
+        if (memberRepository.findByLoginId(dto.getLoginId()).isPresent()) {
+            return null;
+        }
         Member member = memberRepository.save(Member.createMember(dto));
         return new AddMemberResDTO(member.getId());
     }

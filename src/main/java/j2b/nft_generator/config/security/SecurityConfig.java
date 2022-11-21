@@ -51,6 +51,8 @@ public class SecurityConfig {
                 .antMatchers("/signUp/**").permitAll()
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/error/**").permitAll()
+                .antMatchers("/signUpSuccess/**").permitAll()
+                .antMatchers("/signUpFail/**").permitAll()
                 .anyRequest().authenticated();
 
         http

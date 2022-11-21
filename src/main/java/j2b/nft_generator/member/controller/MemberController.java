@@ -1,6 +1,7 @@
 package j2b.nft_generator.member.controller;
 
 import j2b.nft_generator.member.dto.AddMemberReqDTO;
+import j2b.nft_generator.member.dto.AddMemberResDTO;
 import j2b.nft_generator.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +56,22 @@ public class MemberController {
             return "signUpForm";
         }
 
-        memberService.createMember(dto);
+        AddMemberResDTO member = memberService.createMember(dto);
+        if (member == null) {
+            return "signUpFail";
+        }
+
         return "redirect:/signUpSuccess";
 
     }
+
+    /**
+     * 회원가입 성공시 리다이렉트 되는 페이지입니다.
+     * @return 회원가입 성공 페이지
+     */
+    @GetMapping("/signUpSuccess")
+    public String signUpSuccess() {
+        return "signUpSuccess";
+    }
+
 }
