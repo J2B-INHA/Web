@@ -6,17 +6,20 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import j2b.nft_generator.file.dto.FileUploadResDTO;
+import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.apache.commons.fileupload.FileItem;
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 /**
  * 파일 업로드 관련 Util 클래스입니다.
@@ -30,7 +33,8 @@ public class FileUploadUtil {
 
     public static final String NFT_CATEGORY = "nft";
     public static final String PREVIEW_CATEGORY = "preview";
-    private String SERVER_FILE_DIR = File.separator + "originalFile" + File.separator;
+    private String SERVER_FILE_DIR = File.separator + "home" + File.separator + "ec2-user" +
+            File.separator + "originalFile" + File.separator;
 
     /**
      * AWS S3 bucket 이름
@@ -108,9 +112,9 @@ public class FileUploadUtil {
     /**
      * 1개의 파일을 서버에 업로드하는 메서드입니다.
      * @param file 원본 이미지
-     * @return 저장된 파일의 서버 URL
+     * @return 저장된 파일의 서버 경로
      */
-    public String uploadSingleFileToServer(MultipartFile file) throws IOException {
+    public FileUploadToServerReqDTO uploadSingleFileToServer(MultipartFile file) throws IOException {
         makeDirectory();
         if (!file.isEmpty()) {
             String fileName = buildLocalFileName(file.getOriginalFilename());
@@ -118,7 +122,7 @@ public class FileUploadUtil {
             String fileFullName = getFullPath(fileName);
             file.transferTo(new File(fileFullName));
 
-            return fileFullName;
+            return new FileUploadToServerReqDTO(fileName, fileFullName);
         }
         return null;
     }
@@ -132,6 +136,26 @@ public class FileUploadUtil {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    /**
+     * 서버에 저장되어 있는 파일을 AWS S3에 업로드하고, 접근 URL을 반환합니다.
+     * @param category 파일의 유형
+     * @param filePath S3에 업로드할 파일의 로컬 경로
+     * @return AWS S3에 업로드된 파일의 URL
+     */
+    public FileUploadResDTO uploadSingleFileFromServer(String category, String filePath) throws IOException {
+        File file = new File(filePath);
+        FileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false, file.getName(),
+                (int) file.length(), file.getParentFile());
+
+        InputStream input = new FileInputStream(file);
+        OutputStream os = fileItem.getOutputStream();
+        IOUtils.copy(input, os);
+
+        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
+
+        return uploadSingleFile(category, multipartFile);
     }
 
     /**
