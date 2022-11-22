@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public class NftController {
     public String createNFT(@Valid @ModelAttribute("nftForm") AddNftReqDTO nftDto,
                             BindingResult bindingResult,
                             @RequestPart("mainImageFile") MultipartFile mainImage,
-                            @RequestPart("previewImageFile") MultipartFile previewImage) {
+                            @RequestPart("previewImageFile") MultipartFile previewImage) throws IOException {
 
         if (bindingResult.hasErrors()) {
             return "addItemForm";

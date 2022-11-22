@@ -2,6 +2,8 @@ package j2b.nft_generator.nft.service;
 
 import j2b.nft_generator.file.FileUploadUtil;
 import j2b.nft_generator.file.dto.FileUploadResDTO;
+import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
+import j2b.nft_generator.imageconverter.ImageConverter;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +39,7 @@ public class NftService {
 
     private final NftRepository nftRepository;
     private final FileUploadUtil fileUploadUtil;
+    private final ImageConverter imageConverter;
 
     /**
      * NFT 엔티티를 생성하고, 넘겨받은 파일에 대한 파일업로드를 진행합니다.
@@ -43,9 +47,14 @@ public class NftService {
      * @param member NFT를 생성하는 사용자
      * @return 생성된 NFT 엔티티의 ID를 담고 있는 DTO
      */
-    public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member) {
+    public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member)
+            throws IOException {
         FileUploadResDTO mainFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
         FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, previewImage);
+
+        // 로컬에 파일 저장 후 이미지 변환 후 S3에 업로드
+        FileUploadToServerReqDTO toServerReqDTO = fileUploadUtil.uploadSingleFileToServer(mainImage);
+
 
         Nft createdNft = nftRepository.save(Nft.createNft(dto, mainFile.getFileUrl(),
                 previewFile.getFileUrl(), mainFile.getFileName(), previewFile.getFileName(), member));
