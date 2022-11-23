@@ -23,18 +23,22 @@ public class PythonInit {
     /**
      * 빌드 시 파이썬 설치 명령어
      */
-    private final List<String> installCommandList = Arrays.asList(
-            BASH_PREFIX + "sudo yum install -y python-pip",
+    private final List<List<String>> installCommandList = Arrays.asList(
+            Arrays.asList("yum", "install", "-y", "python-pip"),
+            Arrays.asList("pip3", "install", "numpy"),
+            Arrays.asList("yum", "install", "-y", "opencv-python"),
+            Arrays.asList("pip3", "install", "opencv-python"));
+            /*BASH_PREFIX + "sudo yum install -y python-pip",
             BASH_PREFIX + "sudo pip3 install numpy",
             BASH_PREFIX + "sudo yum install -y opencv-python",
-            BASH_PREFIX + "sudo pip3 install opencv-python");
+            BASH_PREFIX + "sudo pip3 install opencv-python");*/
 
     /**
      * 실 서버에 배포 시 파이썬 관련 패키지를 설치하는 bash 명령어를 실행합니다.
      */
     @PostConstruct
     public void init() {
-        for (String command : installCommandList) {
+        for (List<String> command : installCommandList) {
             executeCommand(command);
         }
     }
@@ -43,7 +47,7 @@ public class PythonInit {
      * Bash 명령어를 실행하는 메서드입니다.
      * @param command 명령어
      */
-    private void executeCommand(String command) {
+    private void executeCommand(List<String> command) {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
         try {
