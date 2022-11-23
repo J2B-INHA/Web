@@ -17,11 +17,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @Profile("prod")
 public class PythonInit {
+
+    private final String BASH_PREFIX = "/bin/sh/ -c ";
+
     /**
      * 빌드 시 파이썬 설치 명령어
      */
-    private final List<String> installCommandList = Arrays.asList("sudo yum install -y python-pip",
-            "sudo pip3 install numpy", "sudo yum install -y opencv-python", "sudo pip3 install opencv-python");
+    private final List<String> installCommandList = Arrays.asList(
+            BASH_PREFIX + "sudo yum install -y python-pip",
+            BASH_PREFIX + "sudo pip3 install numpy",
+            BASH_PREFIX + "sudo yum install -y opencv-python",
+            BASH_PREFIX + "sudo pip3 install opencv-python");
 
     /**
      * 실 서버에 배포 시 파이썬 관련 패키지를 설치하는 bash 명령어를 실행합니다.

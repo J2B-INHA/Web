@@ -170,7 +170,7 @@ public class NftService {
 
         // 7. 생성된 JSON 파일을 S3에 업로드
         FileUploadResDTO jsonS3UploadRes =
-                fileUploadUtil.uploadSingleFileFromServer("json", extractedJsonLocalPath);
+                fileUploadUtil.uploadSingleFileFromServer("metadata", extractedJsonLocalPath);
 
         // 8. 생성된 JSON URL을 NFT 엔티티에 반영
         createdNft.setNftMetaDataUrl(jsonS3UploadRes.getFileUrl());

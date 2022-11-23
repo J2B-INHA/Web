@@ -6,9 +6,7 @@ import j2b.nft_generator.imageconverter.constant.Effect;
 import j2b.nft_generator.imageconverter.dto.ConvertImageReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -25,9 +23,6 @@ import static java.util.UUID.randomUUID;
 @RequiredArgsConstructor
 @Slf4j
 public class ImageConverter {
-
-    private final FileUploadUtil fileUploadUtil;
-
 
     /**
      * 이미지 변환기 파이썬 파일 로컬 경로
@@ -52,6 +47,10 @@ public class ImageConverter {
      * JSON 확장자
      */
     private final String JSON_EXTENSION = ".json";
+    /**
+     * bash 명령어 실행 prefix
+     */
+    private final String BASH_PREFIX = "/bin/sh/ -c ";
 
     /**
      * S3에 업로드되어 있는 이미지를 서버로 다운받아 이미지 변환을 진행하고, 다시 S3에 이미지를 업로드합니다.
@@ -116,7 +115,7 @@ public class ImageConverter {
      * @param command 명령어
      */
     private void executeCommand(String command) {
-        ProcessBuilder builder = new ProcessBuilder(command);
+        ProcessBuilder builder = new ProcessBuilder(BASH_PREFIX + command);
         builder.redirectErrorStream(true);
         try {
             builder.start();
