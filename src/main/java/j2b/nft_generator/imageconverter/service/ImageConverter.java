@@ -67,7 +67,7 @@ public class ImageConverter {
             // 이미지 변환
 
             List<String> generateNFTCommand =
-                    Arrays.asList("python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/json/",
+                    Arrays.asList("sudo", "python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedImage/",
                             dto.getEffect().getKey(), toServerReqDTO.getFilePath(), dto.getSigmaS().toString(),
                             dto.getSigmaR().toString(), toServerReqDTO.getFileName());
             executeCommand(generateNFTCommand);
@@ -109,8 +109,8 @@ public class ImageConverter {
     extractJsonFromImage(ConvertImageReqDTO dto, FileUploadToServerReqDTO toServerReqDTO,
                                        String nftItemPageUrl, String nftImageUrl) {
 
-        List<String> extractJsonCommand = Arrays.asList("python3", "/home/ec2-user/json_generator.py",
-                toServerReqDTO.getOriginalFileName(), "\"" + dto.getNftDescription() + "\"", nftItemPageUrl,
+        List<String> extractJsonCommand = Arrays.asList("sudo", "python3", "/home/ec2-user/json_generator.py",
+                "/home/ec2-user/json/", toServerReqDTO.getOriginalFileName(), "\"" + dto.getNftDescription() + "\"", nftItemPageUrl,
                 nftImageUrl, randomUUID().toString().substring(0, 10), dto.getEffect().getKey(),
                 dto.getSigmaS().toString(), dto.getSigmaR().toString(), toServerReqDTO.getFileName());
 

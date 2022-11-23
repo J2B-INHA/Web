@@ -38,6 +38,7 @@ public class FileUploadUtil {
     @Value("${user.profile}")
     private String CURRENT_PROFILE;
 
+
     /**
      * AWS S3 bucket 이름
      */
