@@ -28,11 +28,7 @@ public class ImageConverter {
 
     private final FileUploadUtil fileUploadUtil;
 
-    /**
-     * 빌드 시 파이썬 설치 명령어
-     */
-    private final List<String> installCommandList = Arrays.asList("sudo yum install -y python-pip",
-            "sudo pip3 install numpy", "sudo yum install -y opencv-python", "sudo pip3 install opencv-python");
+
     /**
      * 이미지 변환기 파이썬 파일 로컬 경로
      */
@@ -56,17 +52,6 @@ public class ImageConverter {
      * JSON 확장자
      */
     private final String JSON_EXTENSION = ".json";
-
-    /**
-     * 실 서버에 배포 시 파이썬 관련 패키지를 설치하는 bash 명령어를 실행합니다.
-     */
-    @PostConstruct
-    @Profile("prod")
-    public void init() {
-        for (String command : installCommandList) {
-            executeCommand(command);
-        }
-    }
 
     /**
      * S3에 업로드되어 있는 이미지를 서버로 다운받아 이미지 변환을 진행하고, 다시 S3에 이미지를 업로드합니다.

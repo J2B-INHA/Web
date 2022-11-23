@@ -73,7 +73,7 @@ public class NftService {
         // 4. NFT 상품 생성
         Nft createdNft = nftRepository.save(Nft.createNft(dto, imageS3UploadRes.getFileUrl(),
                 previewFile.getFileUrl(), imageS3UploadRes.getFileName(), previewFile.getFileName(), member));
-        
+
         // 5. JSON 파일 생성
         String extractedJsonLocalPath = imageConverter.extractJsonFromImage(convertImageReqDTO, imageLocalUploadRes,
                 NFT_ITEM_URL + createdNft.getId(), imageS3UploadRes.getFileUrl());
