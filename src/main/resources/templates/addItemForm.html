@@ -227,16 +227,23 @@
                         <input class="form-control" type="file" id="previewImageFile" name="previewImageFile" required />
                     </div>-->
 
+                    <div th:if="${#fields.hasErrors('effect')}" class="form-text" style="color: #bd2130">
+                        NFT 이펙트를 적어주세요!
+                    </div>
                     <div class="mb-3">
                         <label for="imageEffect" class="form-label">사용할 이펙트를 선택해주세요.</label>
-                        <select class="form-select" id="imageEffect">
-                            <option selected value="cartoon">만화화</option>
+                        <select class="form-select" id="imageEffect" name="effect">
+                            <option th:each="effect : ${effects}" th:value="${effect}" th:text="${effect.getValue()}"></option>
+                            <!--<option selected value="cartoon">만화화</option>
                             <option value="detail">디테일 향상</option>
-                            <option value="sketch">흑백 스케치</option>
+                            <option value="sketch">흑백 스케치</option>-->
                         </select>
                     </div>
 
 
+                    <div th:if="${#fields.hasErrors('sigmaS')}" class="form-text" style="color: #bd2130">
+                        sigma S를 적어주세요!
+                    </div>
                     <div class="mb-3">
                         <label for="sigmaS" class="form-label">sigma_s(클수록 이미지가 더 매끄러워집니다!)를 선택해주세요.</label>
                         <input
@@ -251,6 +258,9 @@
                         >
                     </div>
 
+                    <div th:if="${#fields.hasErrors('sigmaR')}" class="form-text" style="color: #bd2130">
+                        NFT 로열티를 적어주세요!
+                    </div>
                     <div class="mb-3">
                         <label for="sigmaR" class="form-label">sigma_r(작을수록 유사한 색상을 평균화합니다!)를 선택해주세요.</label>
                         <input
