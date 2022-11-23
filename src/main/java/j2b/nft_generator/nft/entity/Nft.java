@@ -45,6 +45,9 @@ public class Nft {
     @Column(name = "nft_preview_img", columnDefinition = "TEXT")
     private String previewImageFileName;
 
+    @Column(name = "nft_metadata_url", columnDefinition = "TEXT")
+    private String nftMetaDataUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mbr_id")
     private Member member;
@@ -86,5 +89,13 @@ public class Nft {
                 dto.getRoyaltyInput(), dto.getPrivilegeInput(), mainImageUrl, previewImageUrl,
                 mainImageFileName, previewImageFileName,
                 member);
+    }
+
+    /**
+     * NFT 메타데이터의 URL을 설정하는 메서드입니다.
+     * @param url NFT 메타데이터 (JSON) URL
+     */
+    public void setNftMetaDataUrl(String url) {
+        nftMetaDataUrl = url;
     }
 }
