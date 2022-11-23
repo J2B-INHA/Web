@@ -14,7 +14,7 @@ https://j2b-inha.shop
 # 🧑‍💻 기술 스택
 
 # ERD
-![J2B_NFT_INHA (2)](https://user-images.githubusercontent.com/66549638/203063638-b5a08cdd-7c0c-46bb-b37d-57de2e04041a.png)
+![J2B_NFT_INHA (3)](https://user-images.githubusercontent.com/66549638/203466992-f18247fa-9914-4f3d-bccb-3e82ecdcf754.png)
 
 # 주요 관심사
 
