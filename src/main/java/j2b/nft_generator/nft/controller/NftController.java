@@ -1,5 +1,6 @@
 package j2b.nft_generator.nft.controller;
 
+import j2b.nft_generator.imageconverter.constant.Effect;
 import j2b.nft_generator.member.service.MemberService;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,6 +39,7 @@ public class NftController {
     @GetMapping("/addItem")
     public String addItem(Model model) {
         model.addAttribute("nftForm", new AddNftReqDTO());
+        model.addAttribute("effects", Effect.values());
         return "addItemForm";
     }
 
@@ -44,20 +47,18 @@ public class NftController {
      * NFT 생성 폼 관련 메서드입니다.
      * @param nftDto Form으로부터 입력받은 NFT 기본 정보
      * @param mainImage NFT 메인 이미지
-     * @param previewImage NFT 미리보기 이미지
      * @return item 페이지
      */
     @PostMapping("/addItem")
     public String createNFT(@Valid @ModelAttribute("nftForm") AddNftReqDTO nftDto,
                             BindingResult bindingResult,
-                            @RequestPart("mainImageFile") MultipartFile mainImage,
-                            @RequestPart("previewImageFile") MultipartFile previewImage) {
+                            @RequestPart("mainImageFile") MultipartFile mainImage) throws IOException {
 
         if (bindingResult.hasErrors()) {
             return "addItemForm";
         }
 
-        AddNftResDTO nft = nftService.createNft(nftDto, mainImage, previewImage, memberService.getLoginMember());
+        AddNftResDTO nft = nftService.createNft(nftDto, mainImage, memberService.getLoginMember());
         return "redirect:/item/" + nft.getId();
     }
 
