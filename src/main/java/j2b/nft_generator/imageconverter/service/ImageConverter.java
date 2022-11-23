@@ -66,7 +66,7 @@ public class ImageConverter {
         if (dto.getEffect() == Effect.CARTOON || dto.getEffect() == Effect.DETAIL || dto.getEffect() == Effect.SKETCH) {
             // 이미지 변환
             executeCommand(EXECUTE_PYTHON_COMMAND + " " + IMAGE_CONVERTER_LOCAL_PATH + " " +
-                    CONVERTED_IMAGE_LOCAL_PATH + " " + dto.getEffect().getValue() + " " + toServerReqDTO.getFilePath() +
+                    CONVERTED_IMAGE_LOCAL_PATH + " " + dto.getEffect().getKey() + " " + toServerReqDTO.getFilePath() +
                     " " + dto.getSigmaS() + " " + dto.getSigmaR() + " " + toServerReqDTO.getFileName());
 
             // 변환된 이미지의 경로 반환
@@ -104,7 +104,7 @@ public class ImageConverter {
         executeCommand(EXECUTE_PYTHON_COMMAND + " " + EXTRACTED_JSON_LOCAL_PATH + " " +
                 toServerReqDTO.getOriginalFileName() + " " + "\"" + dto.getNftDescription() + "\" " +
                 nftItemPageUrl + "  " + nftImageUrl + " " + randomUUID().toString().substring(0, 10) + " " +
-                dto.getEffect().getValue() + " " + dto.getSigmaS() + " " + dto.getSigmaR() + "  " +
+                dto.getEffect().getKey() + " " + dto.getSigmaS() + " " + dto.getSigmaR() + "  " +
                 toServerReqDTO.getFileName());
 
         // 추출된 JSON의 경로 반환
