@@ -112,7 +112,8 @@ public class ImageConverter {
      * @param nftImageUrl NFT 이미지 URL
      * @return JSON 파일이 저장된 로컬 경로
      */
-    public String extractJsonFromImage(ConvertImageReqDTO dto, FileUploadToServerReqDTO toServerReqDTO,
+    public String
+    extractJsonFromImage(ConvertImageReqDTO dto, FileUploadToServerReqDTO toServerReqDTO,
                                        String nftItemPageUrl, String nftImageUrl) {
 
         executeCommand(EXECUTE_PYTHON_COMMAND + " " + EXTRACTED_JSON_LOCAL_PATH + " " +

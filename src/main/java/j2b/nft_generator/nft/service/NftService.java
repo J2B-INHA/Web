@@ -3,6 +3,7 @@ package j2b.nft_generator.nft.service;
 import j2b.nft_generator.file.FileUploadUtil;
 import j2b.nft_generator.file.dto.FileUploadResDTO;
 import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
+import j2b.nft_generator.imageconverter.dto.ConvertImageReqDTO;
 import j2b.nft_generator.imageconverter.service.ImageConverter;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
@@ -40,6 +41,7 @@ public class NftService {
     private final NftRepository nftRepository;
     private final FileUploadUtil fileUploadUtil;
     private final ImageConverter imageConverter;
+    private final String NFT_ITEM_URL = "https://j2b-inha.shop/item/";
 
     /**
      * NFT 엔티티를 생성하고, 넘겨받은 파일에 대한 파일업로드를 진행합니다.
@@ -49,15 +51,43 @@ public class NftService {
      */
     public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member)
             throws IOException {
-        FileUploadResDTO mainFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
-        FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, previewImage);
+        // FileUploadResDTO mainFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
+        FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, mainImage);
 
         // 로컬에 파일 저장 후 이미지 변환 후 S3에 업로드
-        FileUploadToServerReqDTO toServerReqDTO = fileUploadUtil.uploadSingleFileToServer(mainImage);
 
+        // 1. 로컬 서버에 이미지 업로드
+        FileUploadToServerReqDTO imageLocalUploadRes = fileUploadUtil.uploadSingleFileToServer(mainImage);
 
-        Nft createdNft = nftRepository.save(Nft.createNft(dto, mainFile.getFileUrl(),
-                previewFile.getFileUrl(), mainFile.getFileName(), previewFile.getFileName(), member));
+        // 2. 업로드된 이미지 변환
+        ConvertImageReqDTO convertImageReqDTO = new ConvertImageReqDTO(dto.getEffect(), dto.getSigmaS(),
+                dto.getSigmaR(), dto.getDescriptionInput());
+
+        String convertedImageLocalPath =
+                imageConverter.convertImage(convertImageReqDTO, imageLocalUploadRes);
+
+        // 3. 로컬 서버에 있는 변환된 이미지를 S3에 업로드
+        FileUploadResDTO imageS3UploadRes =
+                fileUploadUtil.uploadSingleFileFromServer(NFT_CATEGORY, convertedImageLocalPath);
+
+        // 4. NFT 상품 생성
+        Nft createdNft = nftRepository.save(Nft.createNft(dto, imageS3UploadRes.getFileUrl(),
+                previewFile.getFileUrl(), imageS3UploadRes.getFileName(), previewFile.getFileName(), member));
+        
+        // 5. JSON 파일 생성
+        String extractedJsonLocalPath = imageConverter.extractJsonFromImage(convertImageReqDTO, imageLocalUploadRes,
+                NFT_ITEM_URL + createdNft.getId(), imageS3UploadRes.getFileUrl());
+
+        // 6. 생성된 JSON 파일을 S3에 업로드
+        FileUploadResDTO jsonS3UploadRes =
+                fileUploadUtil.uploadSingleFileFromServer("json", extractedJsonLocalPath);
+
+        // 7. 생성된 JSON URL을 NFT 엔티티에 반영
+        createdNft.setNftMetaDataUrl(jsonS3UploadRes.getFileUrl());
+
+        // 8. 로컬 서버에 남아있는 변환된 이미지와 JSON 파일 삭제
+        fileUploadUtil.deleteSingleFileFromServer(imageLocalUploadRes.getFilePath());
+        fileUploadUtil.deleteSingleFileFromServer(extractedJsonLocalPath);
 
         return new AddNftResDTO(createdNft.getId());
     }
