@@ -35,6 +35,8 @@ public class FileUploadUtil {
     public static final String PREVIEW_CATEGORY = "preview";
     private String SERVER_FILE_DIR = File.separator + "home" + File.separator + "ec2-user" +
             File.separator + "originalFile" + File.separator;
+    @Value("${user.profile}")
+    private String CURRENT_PROFILE;
 
     /**
      * AWS S3 bucket 이름
@@ -64,10 +66,11 @@ public class FileUploadUtil {
     /**
      * 로컬 환경에서 빌드될 때는 윈도우에 맞게 경로 설정을 합니다.
      */
-    @Profile("dev")
     @PostConstruct
     public void init() {
-        SERVER_FILE_DIR = "C:" + File.separator + "originalFile" + File.separator;
+        if (CURRENT_PROFILE.equals("dev")) {
+            SERVER_FILE_DIR = "C:" + File.separator + "originalFile" + File.separator;
+        }
     }
 
     /**
