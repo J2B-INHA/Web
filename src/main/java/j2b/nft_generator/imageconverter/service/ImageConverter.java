@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,9 +65,17 @@ public class ImageConverter {
 
         if (dto.getEffect() == Effect.CARTOON || dto.getEffect() == Effect.DETAIL || dto.getEffect() == Effect.SKETCH) {
             // 이미지 변환
-            executeCommand(EXECUTE_PYTHON_COMMAND + " " + IMAGE_CONVERTER_LOCAL_PATH + " " +
+
+            List<String> generateNFTCommand =
+                    Arrays.asList("python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/json/",
+                            dto.getEffect().getKey(), toServerReqDTO.getFilePath(), dto.getSigmaS().toString(),
+                            dto.getSigmaR().toString(), toServerReqDTO.getFileName());
+            executeCommand(generateNFTCommand);
+
+            /*executeCommand(EXECUTE_PYTHON_COMMAND + " " + IMAGE_CONVERTER_LOCAL_PATH + " " +
                     CONVERTED_IMAGE_LOCAL_PATH + " " + dto.getEffect().getKey() + " " + toServerReqDTO.getFilePath() +
                     " " + dto.getSigmaS() + " " + dto.getSigmaR() + " " + toServerReqDTO.getFileName());
+            */
 
             // 변환된 이미지의 경로 반환
             return CONVERTED_IMAGE_LOCAL_PATH + toServerReqDTO.getFileName();
@@ -100,11 +109,18 @@ public class ImageConverter {
     extractJsonFromImage(ConvertImageReqDTO dto, FileUploadToServerReqDTO toServerReqDTO,
                                        String nftItemPageUrl, String nftImageUrl) {
 
-        executeCommand(EXECUTE_PYTHON_COMMAND + " " + EXTRACTED_JSON_LOCAL_PATH + " " +
+        List<String> extractJsonCommand = Arrays.asList("python3", "/home/ec2-user/json_generator.py",
+                toServerReqDTO.getOriginalFileName(), "\"" + dto.getNftDescription() + "\"", nftItemPageUrl,
+                nftImageUrl, randomUUID().toString().substring(0, 10), dto.getEffect().getKey(),
+                dto.getSigmaS().toString(), dto.getSigmaR().toString(), toServerReqDTO.getFileName());
+
+        executeCommand(extractJsonCommand);
+
+        /*executeCommand(EXECUTE_PYTHON_COMMAND + " " + EXTRACTED_JSON_LOCAL_PATH + " " +
                 toServerReqDTO.getOriginalFileName() + " " + "\"" + dto.getNftDescription() + "\" " +
                 nftItemPageUrl + "  " + nftImageUrl + " " + randomUUID().toString().substring(0, 10) + " " +
                 dto.getEffect().getKey() + " " + dto.getSigmaS() + " " + dto.getSigmaR() + "  " +
-                toServerReqDTO.getFileName());
+                toServerReqDTO.getFileName());*/
 
         // 추출된 JSON의 경로 반환
         return EXTRACTED_JSON_LOCAL_PATH + toServerReqDTO.getFileName() + JSON_EXTENSION;
@@ -114,8 +130,8 @@ public class ImageConverter {
      * Bash 명령어를 실행하는 메서드입니다.
      * @param command 명령어
      */
-    private void executeCommand(String command) {
-        ProcessBuilder builder = new ProcessBuilder(BASH_PREFIX + command);
+    private void executeCommand(List<String> command) {
+        ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
         try {
             builder.start();
