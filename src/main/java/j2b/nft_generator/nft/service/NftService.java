@@ -3,7 +3,7 @@ package j2b.nft_generator.nft.service;
 import j2b.nft_generator.file.FileUploadUtil;
 import j2b.nft_generator.file.dto.FileUploadResDTO;
 import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
-import j2b.nft_generator.imageconverter.ImageConverter;
+import j2b.nft_generator.imageconverter.service.ImageConverter;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;

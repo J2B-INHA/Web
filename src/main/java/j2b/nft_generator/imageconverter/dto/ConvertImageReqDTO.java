@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 어떻게 이미지를 변환할지를 저장하는 DTO입니다.
+ * TODO : Sketch를 사용자에게 입력받는 로직
  * @version 1.0.0
  * @author CHO Min Ho
  */
@@ -19,7 +20,7 @@ public class ConvertImageReqDTO {
     private Integer sigmaS;
     private Double sigmaR;
     private String nftDescription;
-    private String nftItemUrl;
-    private Sketch sketch;
-    private Double shadeFactor;
+
+    // private Sketch sketch;
+    // private Double shadeFactor;
 }

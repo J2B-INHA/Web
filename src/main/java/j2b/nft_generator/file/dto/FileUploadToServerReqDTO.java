@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 서버에 이미지를 저장할하고나서 반환하는 DTO입니다.
+ * 서버에 이미지를 저장하고나서 반환하는 DTO입니다.
  * @version 1.0.0
  * @author CHO Min Ho
  */
@@ -15,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class FileUploadToServerReqDTO {
     private String fileName;
     private String filePath;
+    private String originalFileName;
 }

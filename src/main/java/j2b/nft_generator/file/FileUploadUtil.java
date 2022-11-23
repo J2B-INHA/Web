@@ -122,7 +122,7 @@ public class FileUploadUtil {
             String fileFullName = getFullPath(fileName);
             file.transferTo(new File(fileFullName));
 
-            return new FileUploadToServerReqDTO(fileName, fileFullName);
+            return new FileUploadToServerReqDTO(fileName, fileFullName, file.getOriginalFilename());
         }
         return null;
     }
