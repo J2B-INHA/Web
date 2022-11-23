@@ -2,6 +2,9 @@ package j2b.nft_generator.nft.service;
 
 import j2b.nft_generator.file.FileUploadUtil;
 import j2b.nft_generator.file.dto.FileUploadResDTO;
+import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
+import j2b.nft_generator.imageconverter.dto.ConvertImageReqDTO;
+import j2b.nft_generator.imageconverter.service.ImageConverter;
 import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.dto.AddNftResDTO;
@@ -11,11 +14,13 @@ import j2b.nft_generator.nft.entity.Nft;
 import j2b.nft_generator.nft.repository.NftRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +41,12 @@ public class NftService {
 
     private final NftRepository nftRepository;
     private final FileUploadUtil fileUploadUtil;
+    private final ImageConverter imageConverter;
+    private final String NFT_ITEM_URL = "https://j2b-inha.shop/item/";
+
+    @Value("${user.profile}")
+    private String CURRENT_PROFILE;
+
 
     /**
      * NFT 엔티티를 생성하고, 넘겨받은 파일에 대한 파일업로드를 진행합니다.
@@ -43,14 +54,19 @@ public class NftService {
      * @param member NFT를 생성하는 사용자
      * @return 생성된 NFT 엔티티의 ID를 담고 있는 DTO
      */
-    public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, MultipartFile previewImage, Member member) {
-        FileUploadResDTO mainFile = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
-        FileUploadResDTO previewFile = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, previewImage);
+    public AddNftResDTO createNft(AddNftReqDTO dto, MultipartFile mainImage, Member member)
+            throws IOException {
+        // 1. 로컬일 경우
+        if (CURRENT_PROFILE.equals("dev")) {
+            return createNFTInLocal(dto, mainImage, member);
+        }
 
-        Nft createdNft = nftRepository.save(Nft.createNft(dto, mainFile.getFileUrl(),
-                previewFile.getFileUrl(), mainFile.getFileName(), previewFile.getFileName(), member));
+        // 2. 실제 서버일 경우
+        if (CURRENT_PROFILE.equals("prod")) {
+            return createNFTInServer(dto, mainImage, member);
+        }
 
-        return new AddNftResDTO(createdNft.getId());
+        return null;
     }
 
     /**
@@ -97,6 +113,73 @@ public class NftService {
             result.add(new HomeNftResDTO(nft.getId(), nft.getName(), nft.getPrice(), nft.getPreviewImageUrl()));
         }
         return result;
+    }
+
+    /**
+     * 로컬에서 이미지 변환을 진행하지 않고 NFT를 생성하는 메서드입니다.
+     * TODO : JSON 파일을 더미로 넣어놓는 테스트 데이터
+     * @param dto 생성할 NFT 정보
+     * @param mainImage 원본 이미지
+     * @param member 사용자
+     * @return 생성된 NFT의 정보를 담고 있는 DTO
+     */
+    private AddNftResDTO createNFTInLocal(AddNftReqDTO dto, MultipartFile mainImage, Member member) {
+        // 1. 이미지 업로드
+        FileUploadResDTO fileUploadResDTO = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
+
+        // 2. NFT 상품 생성
+        Nft createdNft = nftRepository.save(Nft.createNft(dto, fileUploadResDTO.getFileUrl(),
+                fileUploadResDTO.getFileUrl(), fileUploadResDTO.getFileName(), fileUploadResDTO.getFileName(), member));
+
+        return new AddNftResDTO(createdNft.getId());
+    }
+
+    /**
+     * 실제 서버에서 이미지 변환까지 진행해서 NFT를 생성하는 메서드입니다.
+     * @param dto 생성할 NFT 정보
+     * @param mainImage 원본 이미지
+     * @param member 사용자
+     * @return 생성된 NFT의 정보를 담고 있는 DTO
+     * @throws IOException 파일 업로드 실패 시
+     */
+    private AddNftResDTO createNFTInServer(AddNftReqDTO dto, MultipartFile mainImage, Member member) throws IOException {
+        // 1. 로컬 서버에 이미지 업로드
+        FileUploadToServerReqDTO imageLocalUploadRes = fileUploadUtil.uploadSingleFileToServer(mainImage);
+
+        // 2. S3에 원본 이미지 (미리보기 이미지로 사용) 업로드
+        FileUploadResDTO previewImageRes = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, mainImage);
+
+        // 3. 업로드된 이미지 변환
+        ConvertImageReqDTO convertImageReqDTO = new ConvertImageReqDTO(dto.getEffect(), dto.getSigmaS(),
+                dto.getSigmaR(), dto.getDescriptionInput());
+
+        String convertedImageLocalPath =
+                imageConverter.convertImage(convertImageReqDTO, imageLocalUploadRes);
+
+        // 4. 로컬 서버에 있는 변환된 이미지를 S3에 업로드
+        FileUploadResDTO imageS3UploadRes =
+                fileUploadUtil.uploadSingleFileFromServer(NFT_CATEGORY, convertedImageLocalPath);
+
+        // 5. NFT 상품 생성
+        Nft createdNft = nftRepository.save(Nft.createNft(dto, imageS3UploadRes.getFileUrl(),
+                previewImageRes.getFileUrl(), imageS3UploadRes.getFileName(), previewImageRes.getFileName(), member));
+
+        // 6. JSON 파일 생성
+        String extractedJsonLocalPath = imageConverter.extractJsonFromImage(convertImageReqDTO, imageLocalUploadRes,
+                NFT_ITEM_URL + createdNft.getId(), imageS3UploadRes.getFileUrl());
+
+        // 7. 생성된 JSON 파일을 S3에 업로드
+        FileUploadResDTO jsonS3UploadRes =
+                fileUploadUtil.uploadSingleFileFromServer("metadata", extractedJsonLocalPath);
+
+        // 8. 생성된 JSON URL을 NFT 엔티티에 반영
+        createdNft.setNftMetaDataUrl(jsonS3UploadRes.getFileUrl());
+
+        // 9. 로컬 서버에 남아있는 변환된 이미지와 JSON 파일 삭제
+        fileUploadUtil.deleteSingleFileFromServer(imageLocalUploadRes.getFilePath());
+        fileUploadUtil.deleteSingleFileFromServer(extractedJsonLocalPath);
+
+        return new AddNftResDTO(createdNft.getId());
     }
 
 }
