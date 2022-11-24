@@ -81,7 +81,7 @@ public class NftService {
             // TODO : 예외 처리 로직 필요
             return null;
         }
-        return new ViewNftResDTO(findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
+        return new ViewNftResDTO(findNft.get().getId(), findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
                 findNft.get().getMainImageUrl(), findNft.get().getRoyalty(), findNft.get().getPrivilege(), findNft.get().getMember().getName());
     }
 
@@ -174,11 +174,12 @@ public class NftService {
                 fileUploadUtil.uploadSingleFileFromServer("metadata", extractedJsonLocalPath);
 
         // 8. 생성된 JSON URL을 NFT 엔티티에 반영
-        createdNft.setNftMetaDataUrl(jsonS3UploadRes.getFileUrl());
+        createdNft.setNftMetaData(jsonS3UploadRes.getFileUrl(), jsonS3UploadRes.getFileName());
 
-        // 9. 로컬 서버에 남아있는 변환된 이미지와 JSON 파일 삭제
+        // 9. 로컬 서버에 남아있는 원본 이미지와 변환된 이미지와 JSON 파일 삭제
         fileUploadUtil.deleteSingleFileFromServer(imageLocalUploadRes.getFilePath());
         fileUploadUtil.deleteSingleFileFromServer(extractedJsonLocalPath);
+        fileUploadUtil.deleteSingleFileFromServer(convertedImageLocalPath);
 
         return new AddNftResDTO(createdNft.getId());
     }
