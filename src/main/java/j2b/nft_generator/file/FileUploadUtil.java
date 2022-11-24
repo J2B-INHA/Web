@@ -97,6 +97,7 @@ public class FileUploadUtil {
             amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
+            e.printStackTrace();
             log.error("파일 업로드 중 IOException 발생!!!");
             // TODO : 예외 처리 로직
         }

@@ -28,10 +28,10 @@ public class PythonInit {
      * 빌드 시 파이썬 설치 명령어
      */
     private final List<List<String>> installCommandList = Arrays.asList(
-            Arrays.asList("bash", "-c", "sudo", "yum", "install", "-y", "python-pip"),
-            Arrays.asList("bash", "-c", "sudo", "pip3", "install", "numpy"),
-            Arrays.asList("bash", "-c", "sudo", "yum", "install", "-y", "opencv-python"),
-            Arrays.asList("bash", "-c", "sudo", "pip3", "install", "opencv-python"));
+            Arrays.asList("/bin/sh", "sudo", "-c", "yum", "install", "-y", "python-pip"),
+            Arrays.asList("/bin/sh", "sudo", "-c", "pip3", "install", "numpy"),
+            Arrays.asList("/bin/sh", "sudo", "-c", "yum", "install", "-y", "opencv-python"),
+            Arrays.asList("/bin/sh", "sudo", "-c", "pip3", "install", "opencv-python"));
             /*BASH_PREFIX + "sudo yum install -y python-pip",
             BASH_PREFIX + "sudo pip3 install numpy",
             BASH_PREFIX + "sudo yum install -y opencv-python",
