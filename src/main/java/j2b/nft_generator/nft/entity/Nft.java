@@ -48,6 +48,9 @@ public class Nft {
     @Column(name = "nft_metadata_url", columnDefinition = "TEXT")
     private String nftMetaDataUrl;
 
+    @Column(name = "nft_metadata_name", columnDefinition = "TEXT")
+    private String nftMetaDataName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mbr_id")
     private Member member;
@@ -95,7 +98,9 @@ public class Nft {
      * NFT 메타데이터의 URL을 설정하는 메서드입니다.
      * @param url NFT 메타데이터 (JSON) URL
      */
-    public void setNftMetaDataUrl(String url) {
+    public void setNftMetaData(String url, String name) {
         nftMetaDataUrl = url;
+        nftMetaDataName = name;
     }
+
 }
