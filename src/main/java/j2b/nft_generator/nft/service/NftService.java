@@ -125,7 +125,7 @@ public class NftService {
      */
     private AddNftResDTO createNFTInLocal(AddNftReqDTO dto, MultipartFile mainImage, Member member) {
         // 1. 이미지 업로드
-        FileUploadResDTO fileUploadResDTO = fileUploadUtil.uploadSingleFile(NFT_CATEGORY, mainImage);
+        FileUploadResDTO fileUploadResDTO = fileUploadUtil.uploadSingleFileByMultipartFile(NFT_CATEGORY, mainImage);
 
         // 2. NFT 상품 생성
         Nft createdNft = nftRepository.save(Nft.createNft(dto, fileUploadResDTO.getFileUrl(),
@@ -143,11 +143,12 @@ public class NftService {
      * @throws IOException 파일 업로드 실패 시
      */
     private AddNftResDTO createNFTInServer(AddNftReqDTO dto, MultipartFile mainImage, Member member) throws IOException {
+
         // 1. 로컬 서버에 이미지 업로드
         FileUploadToServerReqDTO imageLocalUploadRes = fileUploadUtil.uploadSingleFileToServer(mainImage);
 
         // 2. S3에 원본 이미지 (미리보기 이미지로 사용) 업로드
-        FileUploadResDTO previewImageRes = fileUploadUtil.uploadSingleFile(PREVIEW_CATEGORY, mainImage);
+        FileUploadResDTO previewImageRes = fileUploadUtil.uploadSingleFileByFile(PREVIEW_CATEGORY, imageLocalUploadRes.getFile());
 
         // 3. 업로드된 이미지 변환
         ConvertImageReqDTO convertImageReqDTO = new ConvertImageReqDTO(dto.getEffect(), dto.getSigmaS(),

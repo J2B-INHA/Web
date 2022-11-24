@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -81,7 +80,7 @@ public class FileUploadUtil {
      * @param multipartFile 넘겨받은 multipartFile (파일)
      * @return 업로드된 파일의 접근 URL
      */
-    public FileUploadResDTO uploadSingleFile(String category, MultipartFile multipartFile) {
+    public FileUploadResDTO uploadSingleFileByMultipartFile(String category, MultipartFile multipartFile) {
         if (multipartFile == null || multipartFile.isEmpty()) {
             return null;
         }
@@ -113,21 +112,36 @@ public class FileUploadUtil {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 
+    /**
+     * File 객체로 파일을 업로드하는 메서드입니다.
+     * @param category 파일의 유형
+     * @param file 넘겨받은 파일
+     * @return 업로드된 파일의 접근 URL
+     */
+    public FileUploadResDTO uploadSingleFileByFile(String category, File file) {
+
+        String fileName = buildFileName(category, file.getName());
+
+        amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+        return new FileUploadResDTO(fileName, amazonS3Client.getUrl(bucketName, fileName).toString());
+    }
+
 
     /**
      * 1개의 파일을 서버에 업로드하는 메서드입니다.
-     * @param file 원본 이미지
+     * @param multipartFile 원본 이미지
      * @return 저장된 파일의 서버 경로
      */
-    public FileUploadToServerReqDTO uploadSingleFileToServer(MultipartFile file) throws IOException {
+    public FileUploadToServerReqDTO uploadSingleFileToServer(MultipartFile multipartFile) throws IOException {
         makeDirectory();
-        if (!file.isEmpty()) {
-            String fileName = buildLocalFileName(file.getOriginalFilename());
+        if (!multipartFile.isEmpty()) {
+            String fileName = buildLocalFileName(multipartFile.getOriginalFilename());
 
             String fileFullName = getFullPath(fileName);
-            file.transferTo(new File(fileFullName));
+            File file = new File(getFullPath(fileName));
+            multipartFile.transferTo(file);
 
-            return new FileUploadToServerReqDTO(fileName, fileFullName, file.getOriginalFilename());
+            return new FileUploadToServerReqDTO(fileName, fileFullName, multipartFile.getOriginalFilename(), file);
         }
         return null;
     }
@@ -160,7 +174,7 @@ public class FileUploadUtil {
 
         MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
 
-        return uploadSingleFile(category, multipartFile);
+        return uploadSingleFileByMultipartFile(category, multipartFile);
     }
 
     /**
