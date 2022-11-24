@@ -81,7 +81,7 @@ public class NftService {
             // TODO : 예외 처리 로직 필요
             return null;
         }
-        return new ViewNftResDTO(findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
+        return new ViewNftResDTO(findNft.get().getId(), findNft.get().getName(), findNft.get().getPrice(), findNft.get().getDescription(),
                 findNft.get().getMainImageUrl(), findNft.get().getRoyalty(), findNft.get().getPrivilege(), findNft.get().getMember().getName());
     }
 

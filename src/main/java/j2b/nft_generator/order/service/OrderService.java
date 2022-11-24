@@ -4,7 +4,7 @@ import j2b.nft_generator.member.service.MemberService;
 import j2b.nft_generator.nft.entity.Nft;
 import j2b.nft_generator.nft.repository.NftRepository;
 import j2b.nft_generator.order.dto.AddOrderResDTO;
-import j2b.nft_generator.order.entity.Order;
+import j2b.nft_generator.order.entity.OrderItem;
 import j2b.nft_generator.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class OrderService {
             // TODO : 공통 예외 처리 로직 필요
         }
 
-        Order order = orderRepository.save(Order.createOrder(memberService.getLoginMember(), findNft.get()));
+        OrderItem order = orderRepository.save(OrderItem.createOrder(memberService.getLoginMember(), findNft.get()));
 
         return new AddOrderResDTO(order.getId(), findNft.get().getMainImageUrl(), findNft.get().getPreviewImageUrl(),
                 findNft.get().getNftMetaDataUrl());

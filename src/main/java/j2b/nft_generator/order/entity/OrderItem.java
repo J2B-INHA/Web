@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-public class Order {
+@Table(name = "ORDER_ITEM")
+public class OrderItem {
 
     @Id
     @GeneratedValue
@@ -31,9 +32,9 @@ public class Order {
     @Column(name = "ord_created_date")
     private LocalDateTime orderedDate;
 
-    protected Order() { }
+    protected OrderItem() { }
 
-    private Order(Member member, Nft nft) {
+    private OrderItem(Member member, Nft nft) {
         this.member = member;
         this.nft = nft;
         this.orderedDate = LocalDateTime.now();
@@ -46,7 +47,7 @@ public class Order {
      * @param nft 구매할 NFT
      * @return Order 엔티티
      */
-    public static Order createOrder(Member member, Nft nft) {
-        return new Order(member, nft);
+    public static OrderItem createOrder(Member member, Nft nft) {
+        return new OrderItem(member, nft);
     }
 }
