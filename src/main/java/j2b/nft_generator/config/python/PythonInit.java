@@ -1,10 +1,13 @@
 package j2b.nft_generator.config.python;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Profile("prod")
+@Slf4j
 public class PythonInit {
 
     private final String BASH_PREFIX = "/bin/sh/ -c ";
@@ -24,10 +28,10 @@ public class PythonInit {
      * 빌드 시 파이썬 설치 명령어
      */
     private final List<List<String>> installCommandList = Arrays.asList(
-            Arrays.asList("sudo", "yum", "install", "-y", "python-pip"),
-            Arrays.asList("sudo", "pip3", "install", "numpy"),
-            Arrays.asList("sudo", "yum", "install", "-y", "opencv-python"),
-            Arrays.asList("sudo", "pip3", "install", "opencv-python"));
+            Arrays.asList("bash", "-c", "sudo", "yum", "install", "-y", "python-pip"),
+            Arrays.asList("bash", "-c", "sudo", "pip3", "install", "numpy"),
+            Arrays.asList("bash", "-c", "sudo", "yum", "install", "-y", "opencv-python"),
+            Arrays.asList("bash", "-c", "sudo", "pip3", "install", "opencv-python"));
             /*BASH_PREFIX + "sudo yum install -y python-pip",
             BASH_PREFIX + "sudo pip3 install numpy",
             BASH_PREFIX + "sudo yum install -y opencv-python",
@@ -51,8 +55,21 @@ public class PythonInit {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
         try {
-            builder.start();
+            Process process = builder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+
+            int exitCode = process.waitFor();
+            log.info("\nExited with error code : " + exitCode);
+
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

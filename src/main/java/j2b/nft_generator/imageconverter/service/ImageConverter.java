@@ -7,8 +7,11 @@ import j2b.nft_generator.imageconverter.dto.ConvertImageReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +70,7 @@ public class ImageConverter {
             // 이미지 변환
 
             List<String> generateNFTCommand =
-                    Arrays.asList("sudo", "python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedFile/",
+                    Arrays.asList("bash", "-c", "python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedFile/",
                             dto.getEffect().getKey(), toServerReqDTO.getFilePath(), dto.getSigmaS().toString(),
                             dto.getSigmaR().toString(), toServerReqDTO.getFileName());
             executeCommand(generateNFTCommand);
@@ -109,7 +112,7 @@ public class ImageConverter {
     extractJsonFromImage(ConvertImageReqDTO dto, FileUploadToServerReqDTO toServerReqDTO,
                                        String nftItemPageUrl, String nftImageUrl) {
 
-        List<String> extractJsonCommand = Arrays.asList("sudo", "python3", "/home/ec2-user/json_generator.py",
+        List<String> extractJsonCommand = Arrays.asList("bash", "-c", "python3", "/home/ec2-user/json_generator.py",
                 "/home/ec2-user/json/", toServerReqDTO.getOriginalFileName(), "\"" + dto.getNftDescription() + "\"", nftItemPageUrl,
                 nftImageUrl, randomUUID().toString().substring(0, 10), dto.getEffect().getKey(),
                 dto.getSigmaS().toString(), dto.getSigmaR().toString(), toServerReqDTO.getFileName());
@@ -134,8 +137,21 @@ public class ImageConverter {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
         try {
-            builder.start();
+            Process process = builder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+
+            int exitCode = process.waitFor();
+            log.info("\nExited with error code : " + exitCode);
+
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
