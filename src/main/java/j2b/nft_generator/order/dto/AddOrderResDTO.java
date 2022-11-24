@@ -16,5 +16,6 @@ public class AddOrderResDTO {
     private Long orderId;
     private String mainImageUrl;
     private String previewImageUrl;
-    private String jsonUrl;
+    private String metadataUrl;
+    private String metadataName;
 }

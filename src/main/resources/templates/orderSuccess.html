@@ -118,11 +118,12 @@
                     </h5>
                     <div class="card-body">
                         <p class="card-text">NFT를 구매하신 분에게는 NFT의 소유자임을 인증하는 메타데이터를 발급해드립니다!</p>
-                        <p class="demo-inline-spacing">
-                            <a class="btn btn-primary me-1" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <a th:href="*{orderInfo.getMetadataUrl()}" href="/" class="btn btn-primary" target="_blank">메타데이터 다운로드</a>
+                        <!--<p class="demo-inline-spacing" th:onclick="'location.href=\'' + ${orderInfo.getMetadataUrl()} +'\''">
+                            <a class="btn btn-primary me-1" data-bs-toggle="collapse" th:href="*{orderInfo.getMetadataUrl()}" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                                 메타데이터 다운로드
                             </a>
-                        </p>
+                        </p>-->
                     </div>
                 </div>
             </div>
