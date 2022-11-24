@@ -8,6 +8,7 @@ import j2b.nft_generator.nft.dto.AddNftReqDTO;
 import j2b.nft_generator.nft.repository.NftRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
@@ -22,6 +23,7 @@ import static j2b.nft_generator.nft.entity.Nft.createNft;
  */
 @Component
 @RequiredArgsConstructor
+@Profile("dev")
 @Slf4j
 public class TestData {
 
