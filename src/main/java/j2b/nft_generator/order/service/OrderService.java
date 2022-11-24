@@ -1,6 +1,5 @@
 package j2b.nft_generator.order.service;
 
-import j2b.nft_generator.member.entity.Member;
 import j2b.nft_generator.member.service.MemberService;
 import j2b.nft_generator.nft.entity.Nft;
 import j2b.nft_generator.nft.repository.NftRepository;
