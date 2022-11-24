@@ -67,7 +67,7 @@ public class ImageConverter {
             // 이미지 변환
 
             List<String> generateNFTCommand =
-                    Arrays.asList("sudo", "python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedImage/",
+                    Arrays.asList("sudo", "python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedFile/",
                             dto.getEffect().getKey(), toServerReqDTO.getFilePath(), dto.getSigmaS().toString(),
                             dto.getSigmaR().toString(), toServerReqDTO.getFileName());
             executeCommand(generateNFTCommand);
