@@ -68,17 +68,34 @@ public class ImageConverter {
 
         if (dto.getEffect() == Effect.CARTOON || dto.getEffect() == Effect.DETAIL || dto.getEffect() == Effect.SKETCH) {
             // 이미지 변환
+            log.info("이미지 변환 시작");
+
+            List<String> command = Arrays.asList("python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedFile/",
+                    dto.getEffect().getKey(), toServerReqDTO.getFilePath(), dto.getSigmaS().toString(),
+                    dto.getSigmaR().toString(), toServerReqDTO.getFileName());
+            String commandStr = "";
+
+            for (String c : command) {
+                commandStr += c + " ";
+            }
+            log.info("생성된 명령어 : {}", commandStr);
 
             List<String> generateNFTCommand =
+                    Arrays.asList("/bin/sh", "-c", commandStr);
+            executeCommand(generateNFTCommand);
+
+            /*List<String> generateNFTCommand =
                     Arrays.asList("/bin/sh", "-c", "python3", "/home/ec2-user/nft_generator.py", "/home/ec2-user/convertedFile/",
                             dto.getEffect().getKey(), toServerReqDTO.getFilePath(), dto.getSigmaS().toString(),
                             dto.getSigmaR().toString(), toServerReqDTO.getFileName());
-            executeCommand(generateNFTCommand);
+            executeCommand(generateNFTCommand);*/
 
             /*executeCommand(EXECUTE_PYTHON_COMMAND + " " + IMAGE_CONVERTER_LOCAL_PATH + " " +
                     CONVERTED_IMAGE_LOCAL_PATH + " " + dto.getEffect().getKey() + " " + toServerReqDTO.getFilePath() +
                     " " + dto.getSigmaS() + " " + dto.getSigmaR() + " " + toServerReqDTO.getFileName());
             */
+
+            log.info("이미지 변환 끝");
 
             // 변환된 이미지의 경로 반환
             return CONVERTED_IMAGE_LOCAL_PATH + toServerReqDTO.getFileName();
@@ -112,10 +129,27 @@ public class ImageConverter {
     extractJsonFromImage(ConvertImageReqDTO dto, FileUploadToServerReqDTO toServerReqDTO,
                                        String nftItemPageUrl, String nftImageUrl) {
 
-        List<String> extractJsonCommand = Arrays.asList("/bin/sh", "-c", "python3", "/home/ec2-user/json_generator.py",
+        log.info("json 추출 시작");
+
+        List<String> command = Arrays.asList("python3", "/home/ec2-user/json_generator.py",
                 "/home/ec2-user/json/", toServerReqDTO.getOriginalFileName(), "\"" + dto.getNftDescription() + "\"", nftItemPageUrl,
                 nftImageUrl, randomUUID().toString().substring(0, 10), dto.getEffect().getKey(),
                 dto.getSigmaS().toString(), dto.getSigmaR().toString(), toServerReqDTO.getFileName());
+
+        String commandStr = "";
+
+        for (String c : command) {
+            commandStr += c + " ";
+        }
+
+        log.info("생성된 명령어 : {}", commandStr);
+
+        List<String> extractJsonCommand = Arrays.asList("/bin/sh", "-c", commandStr);
+
+        /*List<String> extractJsonCommand = Arrays.asList("/bin/sh", "-c", "python3", "/home/ec2-user/json_generator.py",
+                "/home/ec2-user/json/", toServerReqDTO.getOriginalFileName(), "\"" + dto.getNftDescription() + "\"", nftItemPageUrl,
+                nftImageUrl, randomUUID().toString().substring(0, 10), dto.getEffect().getKey(),
+                dto.getSigmaS().toString(), dto.getSigmaR().toString(), toServerReqDTO.getFileName());*/
 
         executeCommand(extractJsonCommand);
 
@@ -124,6 +158,8 @@ public class ImageConverter {
                 nftItemPageUrl + "  " + nftImageUrl + " " + randomUUID().toString().substring(0, 10) + " " +
                 dto.getEffect().getKey() + " " + dto.getSigmaS() + " " + dto.getSigmaR() + "  " +
                 toServerReqDTO.getFileName());*/
+
+        log.info("json 추출 끝");
 
         // 추출된 JSON의 경로 반환
         return EXTRACTED_JSON_LOCAL_PATH + toServerReqDTO.getFileName() + JSON_EXTENSION;
@@ -145,6 +181,11 @@ public class ImageConverter {
             while ((line = reader.readLine()) != null) {
                 log.info(line);
             }
+
+            process.getErrorStream().close();
+            process.getInputStream().close();
+            process.getOutputStream().close();
+
 
             int exitCode = process.waitFor();
             log.info("\nExited with error code : " + exitCode);
