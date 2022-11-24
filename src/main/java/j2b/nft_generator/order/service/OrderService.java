@@ -42,7 +42,8 @@ public class OrderService {
 
         Order order = orderRepository.save(Order.createOrder(memberService.getLoginMember(), findNft.get()));
 
-        return new AddOrderResDTO(order.getId());
+        return new AddOrderResDTO(order.getId(), findNft.get().getMainImageUrl(), findNft.get().getPreviewImageUrl(),
+                findNft.get().getNftMetaDataUrl());
     }
 
 }

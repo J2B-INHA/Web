@@ -14,4 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddOrderResDTO {
     private Long orderId;
+    private String mainImageUrl;
+    private String previewImageUrl;
+    private String jsonUrl;
 }
