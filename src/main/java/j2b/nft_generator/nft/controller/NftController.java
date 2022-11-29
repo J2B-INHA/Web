@@ -81,6 +81,18 @@ public class NftController {
     }
 
     /**
+     * NFT 민팅을 하는 메서드입니다.
+     * @param id 민팅할 NFT의 ID
+     * @return NFT 민팅 완료 페이지
+     */
+    @GetMapping("/item/{id}/mint")
+    public String mintNft(@PathVariable(name = "id") Long id) {
+        nftService.mintNft(id);
+        
+        return "mintingSuccess";
+    }
+
+    /**
      * 홈페이지 메서드입니다.
      * @return 홈페이지
      */
