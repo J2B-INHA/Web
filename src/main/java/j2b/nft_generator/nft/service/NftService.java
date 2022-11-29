@@ -139,7 +139,7 @@ public class NftService {
                                     NFT_MINT_DIRECTORY,
                                     "&&",
                                     ".",
-                                    "~/.nvm/nvm.sh",
+                                    "/home/ec2-user/.nvm/nvm.sh",
                                     "&&",
                                     NODE_COMMAND,
                                     NFT_MINT_FILE,
