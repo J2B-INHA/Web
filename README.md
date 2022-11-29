@@ -63,22 +63,22 @@ AWS t2.small 인스턴스 <span style="color: yellow">(RAM 용량 2GB)</span>를
 
     https://chominho96.github.io/aws/Nginx-413-Request-Entity-Too-Large-%EC%9D%B4%EC%8A%88/
 
-2. Spring에서 Bash 명령어 실행 (업데이트 예정)
+2. Spring에서 Bash 명령어 실행
 
     https://chominho96.github.io/spring/Spring%EC%97%90%EC%84%9C-Bash-%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0/
 
-3. Linux에서 opencv 설치 (업데이트 예정)
+3. Linux에서 opencv 설치
 
     https://chominho96.github.io/aws/Linux%EC%97%90%EC%84%9C-opencv-%EC%84%A4%EC%B9%98/
 
-4. Amazon Linux 내부 파일 접근 시 FileNotFoundException 이슈 (업데이트 예정)
+4. Amazon Linux 내부 파일 접근 시 FileNotFoundException 이슈
 
     https://chominho96.github.io/aws/EC2-%EB%82%B4%EB%B6%80-%ED%8C%8C%EC%9D%BC-%EC%A0%91%EA%B7%BC-%EC%8B%9C-FileNotFoundException-%EC%9D%B4%EC%8A%88/
 
-5. multipartFile.transferTo() 메서드 호출 후 InputStream consume 이슈 (업데이트 예정)
+5. multipartFile.transferTo() 메서드 호출 후 InputStream consume 이슈
 
     https://chominho96.github.io/spring/multipartFile.transferTo()-%EB%A9%94%EC%84%9C%EB%93%9C-%ED%98%B8%EC%B6%9C-%ED%9B%84-InputStream-consume-%EC%9D%B4%EC%8A%88/
 
-6. ProcessBuilder 관련 Deadlock 이슈 (업데이트 예정)
+6. ProcessBuilder 관련 Deadlock 이슈
 
     https://chominho96.github.io/spring/ProcessBuilder-Deadlock-%EC%9D%B4%EC%8A%88/
