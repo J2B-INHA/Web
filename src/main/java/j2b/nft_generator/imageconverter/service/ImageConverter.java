@@ -1,5 +1,6 @@
 package j2b.nft_generator.imageconverter.service;
 
+import j2b.nft_generator.bash.BashService;
 import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
 import j2b.nft_generator.imageconverter.constant.Effect;
 import j2b.nft_generator.imageconverter.dto.ConvertImageReqDTO;
@@ -51,6 +52,7 @@ public class ImageConverter {
      * JSON 확장자
      */
     private final String JSON_EXTENSION = ".json";
+    private final BashService bashService;
 
     /**
      * S3에 업로드되어 있는 이미지를 서버로 다운받아 이미지 변환을 진행하고, 다시 S3에 이미지를 업로드합니다.
@@ -68,7 +70,7 @@ public class ImageConverter {
             List<String> generateNFTCommand =
                     Arrays.asList("/bin/sh",
                             "-c",
-                            makeCommand(Arrays.asList(
+                            bashService.makeCommand(Arrays.asList(
                                     PYTHON_COMMAND,
                                     NFT_GENERATOR_PATH,
                                     CONVERTED_IMAGE_LOCAL_PATH,
@@ -78,7 +80,7 @@ public class ImageConverter {
                                     dto.getSigmaR().toString(),
                                     toServerReqDTO.getFileName())));
 
-            executeCommand(generateNFTCommand);
+            bashService.executeCommand(generateNFTCommand);
 
             // 2. 변환된 이미지의 경로 반환
             return CONVERTED_IMAGE_LOCAL_PATH + toServerReqDTO.getFileName();
@@ -116,7 +118,7 @@ public class ImageConverter {
         List<String> extractJsonCommand = Arrays.asList(
                 "/bin/sh",
                 "-c",
-                makeCommand(Arrays.asList(
+                bashService.makeCommand(Arrays.asList(
                         PYTHON_COMMAND,
                         JSON_GENERATOR_PATH,
                         EXTRACTED_JSON_LOCAL_PATH,
@@ -130,53 +132,10 @@ public class ImageConverter {
                         dto.getSigmaR().toString(),
                         toServerReqDTO.getFileName())));
 
-        executeCommand(extractJsonCommand);
+        bashService.executeCommand(extractJsonCommand);
 
         // 2. 추출된 JSON의 경로 반환
         return EXTRACTED_JSON_LOCAL_PATH + toServerReqDTO.getFileName() + JSON_EXTENSION;
     }
 
-    /**
-     * Bash 명령어를 실행하는 메서드입니다.
-     * @param command 명령어
-     */
-    private void executeCommand(List<String> command) {
-        ProcessBuilder builder = new ProcessBuilder(command);
-        builder.redirectErrorStream(true);
-        try {
-            Process process = builder.start();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-            }
-
-            process.getErrorStream().close();
-            process.getInputStream().close();
-            process.getOutputStream().close();
-
-            int exitCode = process.waitFor();
-            log.info("\nExited with error code : " + exitCode);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * bash 명령어를 만드는 메서드입니다.
-     * @param command 명령어 인자
-     * @return 생성된 bash 명령어
-     */
-    private String makeCommand(List<String> command) {
-        StringBuilder commandStr = new StringBuilder();
-        for (String c : command) {
-            commandStr.append(c).append(" ");
-        }
-        return commandStr.toString();
-    }
 }
