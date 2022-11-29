@@ -47,7 +47,7 @@ public class NftService {
     private final BashService bashService;
     private final String NFT_ITEM_URL = "https://j2b-inha.shop/item/";
     private final String NODE_COMMAND = "node";
-    private final String NFT_MINT_DIRECTORY = "nft-mint";
+    private final String NFT_MINT_DIRECTORY = "/home/ec2-user/nft-mint/";
     private final String NFT_MINT_FILE = "scripts/mint-nft.js";
 
     @Value("${user.profile}")
