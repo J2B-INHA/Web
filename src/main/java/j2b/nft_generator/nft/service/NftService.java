@@ -1,5 +1,6 @@
 package j2b.nft_generator.nft.service;
 
+import j2b.nft_generator.bash.BashService;
 import j2b.nft_generator.file.FileUploadUtil;
 import j2b.nft_generator.file.dto.FileUploadResDTO;
 import j2b.nft_generator.file.dto.FileUploadToServerReqDTO;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +44,11 @@ public class NftService {
     private final NftRepository nftRepository;
     private final FileUploadUtil fileUploadUtil;
     private final ImageConverter imageConverter;
+    private final BashService bashService;
     private final String NFT_ITEM_URL = "https://j2b-inha.shop/item/";
+    private final String NODE_COMMAND = "node";
+    private final String NFT_MINT_DIRECTORY = "nft-mint";
+    private final String NFT_MINT_FILE = "scripts/mint-nft.js";
 
     @Value("${user.profile}")
     private String CURRENT_PROFILE;
@@ -113,6 +119,31 @@ public class NftService {
             result.add(new HomeNftResDTO(nft.getId(), nft.getName(), nft.getPrice(), nft.getPreviewImageUrl()));
         }
         return result;
+    }
+
+    /**
+     * 메타데이터 URL을 이용해서 NFT Minting을 진행하는 메서드입니다.
+     * 현재 버전에서는 테스트 계정으로 Minting이 되도록 설정되어 있으며, 각 사용자의 지갑으로 Minting되진 않습니다.
+     * 또한 트랜잭션 ID 등을 반환하는 로직 등은
+     * @param itemId 등록할 NFT의 상품 ID
+     */
+    public void mintNft(Long itemId) {
+        if (CURRENT_PROFILE.equals("prod")) {
+            String metadataUrl = nftRepository.findById(itemId).get().getNftMetaDataUrl();
+
+            List<String> generateNFTCommand =
+                    Arrays.asList("/bin/sh",
+                            "-c",
+                            bashService.makeCommand(Arrays.asList(
+                                    "cd",
+                                    NFT_MINT_DIRECTORY,
+                                    "&&",
+                                    NODE_COMMAND,
+                                    NFT_MINT_FILE,
+                                    metadataUrl)));
+
+            bashService.executeCommand(generateNFTCommand);
+        }
     }
 
     /**

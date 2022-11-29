@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -62,6 +61,11 @@ public class NftController {
         return "redirect:/item/" + nft.getId();
     }
 
+    /**
+     * 특정 NFT 상품 조회 메서드입니다.
+     * @param id NFT 상품 ID
+     * @return 특정 상품 페이지
+     */
     @GetMapping("/item/{id}")
     public String viewSingleItem(@PathVariable(name = "id") Long id, Model model) {
         ViewNftResDTO result = nftService.viewSingleNft(id);
@@ -76,6 +80,22 @@ public class NftController {
         return "item";
     }
 
+    /**
+     * NFT 민팅을 하는 메서드입니다.
+     * @param id 민팅할 NFT의 ID
+     * @return NFT 민팅 완료 페이지
+     */
+    @GetMapping("/item/{id}/mint")
+    public String mintNft(@PathVariable(name = "id") Long id) {
+        nftService.mintNft(id);
+        
+        return "mintingSuccess";
+    }
+
+    /**
+     * 홈페이지 메서드입니다.
+     * @return 홈페이지
+     */
     @GetMapping("/")
     public String viewHome(Model model) {
         List<HomeNftResDTO> nftBlocks = nftService.getAllNftBlocks();
