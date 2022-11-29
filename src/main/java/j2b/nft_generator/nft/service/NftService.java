@@ -125,9 +125,12 @@ public class NftService {
      * 메타데이터 URL을 이용해서 NFT Minting을 진행하는 메서드입니다.
      * 현재 버전에서는 테스트 계정으로 Minting이 되도록 설정되어 있으며, 각 사용자의 지갑으로 Minting되진 않습니다.
      * 또한 트랜잭션 ID 등을 반환하는 로직 등은
-     * @param metadataUrl 등록할 NFT의 메타데이터
+     * @param itemId 등록할 NFT의 상품 ID
      */
-    public void mintNft(String metadataUrl) {
+    public void mintNft(Long itemId) {
+
+        String metadataUrl = nftRepository.findById(itemId).get().getNftMetaDataUrl();
+
         List<String> generateNFTCommand =
                 Arrays.asList("/bin/sh",
                         "-c",
