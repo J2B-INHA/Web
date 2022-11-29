@@ -138,6 +138,9 @@ public class NftService {
                                     "cd",
                                     NFT_MINT_DIRECTORY,
                                     "&&",
+                                    ".",
+                                    "~/.nvm/nvm.sh",
+                                    "&&",
                                     NODE_COMMAND,
                                     NFT_MINT_FILE,
                                     metadataUrl)));
