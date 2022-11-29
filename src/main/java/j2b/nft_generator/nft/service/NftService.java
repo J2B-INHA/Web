@@ -128,21 +128,22 @@ public class NftService {
      * @param itemId 등록할 NFT의 상품 ID
      */
     public void mintNft(Long itemId) {
+        if (CURRENT_PROFILE.equals("prod")) {
+            String metadataUrl = nftRepository.findById(itemId).get().getNftMetaDataUrl();
 
-        String metadataUrl = nftRepository.findById(itemId).get().getNftMetaDataUrl();
+            List<String> generateNFTCommand =
+                    Arrays.asList("/bin/sh",
+                            "-c",
+                            bashService.makeCommand(Arrays.asList(
+                                    "cd",
+                                    NFT_MINT_DIRECTORY,
+                                    "&&",
+                                    NODE_COMMAND,
+                                    NFT_MINT_FILE,
+                                    metadataUrl)));
 
-        List<String> generateNFTCommand =
-                Arrays.asList("/bin/sh",
-                        "-c",
-                        bashService.makeCommand(Arrays.asList(
-                                "cd",
-                                NFT_MINT_DIRECTORY,
-                                "&&",
-                                NODE_COMMAND,
-                                NFT_MINT_FILE,
-                                metadataUrl)));
-
-        bashService.executeCommand(generateNFTCommand);
+            bashService.executeCommand(generateNFTCommand);
+        }
     }
 
     /**
