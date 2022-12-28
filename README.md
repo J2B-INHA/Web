@@ -6,8 +6,8 @@
 
 인하대학교 J2B팀의 이미지 인식 기반 NFT generator 서비스입니다.
 
-# 🔗 Link
-https://j2b-inha.shop
+# 🔗 Link (서비스 종료)
+~~https://j2b-inha.shop~~
 
 # 📽️ 주요 화면
 ![홈페이지](https://user-images.githubusercontent.com/66549638/203804333-521e1c99-6bba-48fc-9588-0d0dd3048b9d.gif)
